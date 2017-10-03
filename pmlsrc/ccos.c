@@ -77,40 +77,40 @@ COMPLEX z;
     result.imag = -sin(z.real) * sinh(z.imag);
     return (result);
 }
-#endif !defined (__M68881__) && !defined (sfp004)
+#endif /* !defined (__M68881__) #endif !defined (__M68881__) && !defined (sfp004)#endif !defined (__M68881__) && !defined (sfp004) !defined (sfp004) */
 
 #if defined (__M68881__) || defined (sfp004)
 # ifdef ERROR_CHECK	/* no error checking for now	*/
-__asm("
-.text
-_funcname:
-	.ascii	\"ccos\\0\"
-	.even
-");	/* end asm	*/
-# endif ERROR_CHECK
+__asm(
+".text\t\n"
+"_funcname:\t\n"
+"	.ascii	\"ccos\\0\"\t\n"
+"	.even\t\n"
+);	/* end asm	*/
+# endif /* ERROR_CHECK */
 #endif defined (__M68881__) || defined (sfp004)
 
 #ifdef	__M68881__
-__asm("
-.text
-	.globl _ccos
-_ccos:
-	movel	a1,d0		| save a1 as return value
-	fmoved	sp@(4),fp0	| z.real
-	fsinx	fp0,fp1		| cos(z.real)
-	fcosx	fp0,fp0		| sin(z.real)
-	fnegx	fp1,fp1		|-sin(z.real)
-
-	fmoved	sp@(12),fp3	| z.imag
-	fcoshx	fp3,fp2		| cosh(z.imag)
-	fsinhx	fp3,fp3		| sinh(z.imag)
-	
-	fmulx	fp2,fp0		| result.real
-	fmoved	fp0,a1@		|
-	fmulx	fp3,fp1		| result.imag
-	fmoved	fp1,a1@(8)	|
-");	/* end asm	*/
-#endif	__M68881__
+__asm(
+".text\t\n"
+"	.globl _ccos\t\n"
+"_ccos:\t\n"
+"	movel	a1,d0		| save a1 as return value\t\n"
+"	fmoved	sp@(4),fp0	| z.real\t\n"
+"	fsinx	fp0,fp1		| cos(z.real)\t\n"
+"	fcosx	fp0,fp0		| sin(z.real)\t\n"
+"	fnegx	fp1,fp1		|-sin(z.real)\t\n"
+"\t\n"
+"	fmoved	sp@(12),fp3	| z.imag\t\n"
+"	fcoshx	fp3,fp2		| cosh(z.imag)\t\n"
+"	fsinhx	fp3,fp3		| sinh(z.imag)\t\n"
+"	\t\n"
+"	fmulx	fp2,fp0		| result.real\t\n"
+"	fmoved	fp0,a1@		|\t\n"
+"	fmulx	fp3,fp1		| result.imag\t\n"
+"	fmoved	fp1,a1@(8)	|\t\n"
+);	/* end asm	*/
+#endif /* __M68881__ */
 
 #ifdef	sfp004
 __asm("
@@ -186,18 +186,18 @@ _ccos:
 	movel	a0@,a1@(8)
 	movel	a0@,a1@(12)
 ");	/* end asm	*/
-#endif	sfp004
+#endif /* sfp004 */
 
 
 #if defined (__M68881__) || defined (sfp004)
 # ifdef ERROR_CHECK	/* no error checking for now	*/
-__asm("
-	pea	_funcname
-	jmp	c_err_check
-");	/* end asm	*/
-# else  ERROR_CHECK
+__asm(
+"	pea	_funcname\t\n"
+"	jmp	c_err_check\t\n"
+);	/* end asm	*/
+# else /* ERROR_CHECK */
 
 __asm("rts");
 
-# endif ERROR_CHECK
+# endif /* ERROR_CHECK */
 #endif defined (__M68881__) || defined (sfp004)

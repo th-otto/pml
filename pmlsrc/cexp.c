@@ -83,36 +83,36 @@ COMPLEX z;
 
 #else	!defined (__M68881__) && !defined (sfp004)
 #ifdef	ERROR_CHECK
-__asm("
-.text
-.even
-_funcname:
-	.ascii \"cexp\\0\"
-	.even
-");
-#endif	ERROR_CHECK
+__asm(
+".text\t\n"
+".even\t\n"
+"_funcname:\t\n"
+"	.ascii \"cexp\\0\"\t\n"
+"	.even\t\n"
+);
+#endif /* ERROR_CHECK */
 #endif	!defined (__M68881__) && !defined (sfp004)
 
 #ifdef	__M68881__
 
-__asm("
-	.text 
-	.even
-	.globl _cexp
-_cexp:
-	fmovex	fp2,sp@-	| 12 Bytes
-	movel	a1,d0		| save a1 as return value
-	fetoxd	a7@(16),fp0	| exp( z.real )
-	fmoved	a7@(24),fp2
-	fcosx	fp2,fp1
-	fsinx	fp2,fp2
-	fmulx	fp0,fp1		|
-	fmulx	fp0,fp2		|
-	fmoved	fp1,a1@		| fetch result.real
-	fmoved	fp2,a1@(8)	| fetch result.imag
-	fmovex	sp@+,fp2
-");	/* end asm	*/
-#endif	__M68881__
+__asm(
+"	.text\t\n"
+"	.even\t\n"
+"	.globl _cexp\t\n"
+"_cexp:\t\n"
+"	fmovex	fp2,sp@-	| 12 Bytes\t\n"
+"	movel	a1,d0		| save a1 as return value\t\n"
+"	fetoxd	a7@(16),fp0	| exp( z.real )\t\n"
+"	fmoved	a7@(24),fp2\t\n"
+"	fcosx	fp2,fp1\t\n"
+"	fsinx	fp2,fp2\t\n"
+"	fmulx	fp0,fp1		|\t\n"
+"	fmulx	fp0,fp2		|\t\n"
+"	fmoved	fp1,a1@		| fetch result.real\t\n"
+"	fmoved	fp2,a1@(8)	| fetch result.imag\t\n"
+"	fmovex	sp@+,fp2\t\n"
+);	/* end asm	*/
+#endif /* __M68881__ */
 
 #ifdef	sfp004
 __asm("
@@ -181,18 +181,18 @@ _cexp:
 	movel	a0@(zahl),a1@(8)
 	movel	a0@(zahl),a1@(12)
 ");	/* end asm	*/
-#endif	sfp004
+#endif /* sfp004 */
 
 
 #if defined (__M68881__) || defined (sfp004)
 # ifdef ERROR_CHECK	/* no error checking for now	*/
-__asm("
-	pea	_funcname
-	jmp	c_err_check
-");	/* end asm	*/
-# else  ERROR_CHECK
+__asm(
+"	pea	_funcname\t\n"
+"	jmp	c_err_check\t\n"
+);	/* end asm	*/
+# else /* ERROR_CHECK */
 
 __asm("rts");
 
-# endif ERROR_CHECK
+# endif /* ERROR_CHECK */
 #endif defined (__M68881__) || defined (sfp004)

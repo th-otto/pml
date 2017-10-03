@@ -84,21 +84,21 @@ double y;
     return (rtnval);
 }
 
-#else	OLD 	/* mjr: assembler version for  all machines */
-__asm("
-.text
-.even
-.globl _copysign
+#else /* OLD */ /* mjr: assembler version for  all machines */
+__asm(
+".text\t\n"
+".even\t\n"
+".globl _copysign\t\n"
+"\t\n"
+"_copysign:\t\n"
+"	moveml	a7@(4),d0-d1\t\n"
+"	btst	#31,a7@(12)\t\n"
+"	beq	clear\t\n"
+"	bset	#31,d0\t\n"
+"	rts\t\n"
+"clear:\t\n"
+"	bclr	#31,d0\t\n"
+"	rts\t\n"
+);	/* end asm	*/
 
-_copysign:
-	moveml	a7@(4),d0-d1
-	btst	#31,a7@(12)
-	beq	clear
-	bset	#31,d0
-	rts
-clear:
-	bclr	#31,d0
-	rts
-");	/* end asm	*/
-
-#endif	OLD
+#endif /* OLD */

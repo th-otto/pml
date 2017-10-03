@@ -85,7 +85,7 @@ double x;
 	xcpt.name = funcname;
 	xcpt.arg1 = x;
 	if (!matherr (&xcpt)) {
-	    fprintf (stderr, "%s: OVERFLOW error\n", funcname);
+	    //fprintf (stderr, "%s: OVERFLOW error\n", funcname);
 	    errno = ERANGE;
 	    xcpt.retval = log (2 * SQRT_MAXDOUBLE);
 	}

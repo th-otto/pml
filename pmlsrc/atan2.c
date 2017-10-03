@@ -111,7 +111,7 @@ double x;
 	    xcpt.arg1 = x;
 	    xcpt.retval = result;
 	    if (!matherr(&xcpt)) {
-		fprintf (stderr, "%s: DOMAIN error\n", funcname);
+		//fprintf (stderr, "%s: DOMAIN error\n", funcname);
 		errno = EDOM;
 	    }
 	} else {
@@ -126,155 +126,155 @@ double x;
     return (result);
 }
 
-#endif !defined (__M68881__) && !defined (sfp004)
+#endif /* !defined (__M68881__) #endif !defined (__M68881__) && !defined (sfp004)#endif !defined (__M68881__) && !defined (sfp004) !defined (sfp004) */
 #ifdef	__M68881__
-__asm("
-.text
-.even
-_funcname:
-	.ascii	\"atan2\\0\"
-	.even
-
-.globl	_atan2
-_atan2:
-| denormalized numbers are treated as 0
-	tstl	sp@(12)
-	beq	5f		| x == 0!
-	blt	1f		| x < 0!
-				| x > 0: return atan(y/x)
-
-	fmoved	sp@(4),fp0	| get y
-	fdivd	sp@(12),fp0	| y/x	
-	fatanx	fp0,fp0		| atan(y/x)
-	bra 3f			| return
-1:				| x < 0
-
-	fmovecr	#0,fp1		| get pi
-	fmoved	sp@(4),fp0	| get y
-	fdivd	sp@(12),fp0	| y/x
-	fatanx	fp0,fp0		| atan(y/x)
-	btst	#31,sp@(4)	| sign(y)
-	beq	2f		| positive!
-
-	fnegx	fp1,fp1		| transfer sign
-2:	faddx	fp1,fp0		| sign(y)*pi + atan(y/x)
-|	bra 3f			| return
-3:
-	fmoved	fp0,sp@-	| return result
-	moveml	sp@+,d0/d1
-4:	
-	rts			| sigh.
-5:				| x == 0
-	movel	#1073291771,d0	| pi/2
-	movel	#1413754136,d1	|
-
-	tstl	sp@(4)		| 
-	beq	6f		| NaN
-	bge	4b		| exit
-	bset	#31,d0		| x < 0 : return -pi/2
-	bra	4b
-6:	movel	#-1,d0		| NaN
-	movel	#-1,d1		|
-	bra	4b
-");	/* end asm	*/
-#endif	__M68881__
+__asm(
+".text\t\n"
+".even\t\n"
+"_funcname:\t\n"
+"	.ascii	\"atan2\\0\"\t\n"
+"	.even\t\n"
+"\t\n"
+".globl	_atan2\t\n"
+"_atan2:\t\n"
+"| denormalized numbers are treated as 0\t\n"
+"	tstl	sp@(12)\t\n"
+"	beq	5f		| x == 0!\t\n"
+"	blt	1f		| x < 0!\t\n"
+"				| x > 0: return atan(y/x)\t\n"
+"\t\n"
+"	fmoved	sp@(4),fp0	| get y\t\n"
+"	fdivd	sp@(12),fp0	| y/x\t\n"
+"	fatanx	fp0,fp0		| atan(y/x)\t\n"
+"	bra 3f			| return\t\n"
+"1:				| x < 0\t\n"
+"\t\n"
+"	fmovecr	#0,fp1		| get pi\t\n"
+"	fmoved	sp@(4),fp0	| get y\t\n"
+"	fdivd	sp@(12),fp0	| y/x\t\n"
+"	fatanx	fp0,fp0		| atan(y/x)\t\n"
+"	btst	#31,sp@(4)	| sign(y)\t\n"
+"	beq	2f		| positive!\t\n"
+"\t\n"
+"	fnegx	fp1,fp1		| transfer sign\t\n"
+"2:	faddx	fp1,fp0		| sign(y)*pi + atan(y/x)\t\n"
+"|	bra 3f			| return\t\n"
+"3:\t\n"
+"	fmoved	fp0,sp@-	| return result\t\n"
+"	moveml	sp@+,d0/d1\t\n"
+"4:	\t\n"
+"	rts			| sigh.\t\n"
+"5:				| x == 0\t\n"
+"	movel	#1073291771,d0	| pi/2\t\n"
+"	movel	#1413754136,d1	|\t\n"
+"\t\n"
+"	tstl	sp@(4)		| \t\n"
+"	beq	6f		| NaN\t\n"
+"	bge	4b		| exit\t\n"
+"	bset	#31,d0		| x < 0 : return -pi/2\t\n"
+"	bra	4b\t\n"
+"6:	movel	#-1,d0		| NaN\t\n"
+"	movel	#-1,d1		|\t\n"
+"	bra	4b\t\n"
+);	/* end asm	*/
+#endif /* __M68881__ */
 
 #ifdef	sfp004
-__asm("
-
-comm =	 -6
-resp =	-16
-zahl =	  0
-
-.even
-.text
-.even
+__asm(
+"\t\n"
+"comm =	 -6\t\n"
+"resp =	-16\t\n"
+"zahl =	  0\t\n"
+"\t\n"
+".even\t\n"
+".text\t\n"
+".even\t\n"
 _funcname:
-	.ascii	\"atan2\\0\"
-	.even
-.text
-.even
-.globl	_atan2
-_atan2:
-| denormalized numbers are treated as 0
-	lea	0xfffa50,a0
-	moveml	a7@(12),d0-d1	|  x
-	tstl	d0
-	beq	5f		| x == 0!
-	blt	1f		| x < 0!
-				| x > 0: return atan(y/x)
-
-|	fmoved	sp@(4),fp0	| get y
-	movew	#0x5400,a0@(comm)
-	.long	0x0c688900, 0xfff067f8
-	movel	sp@(4),a0@
-	movel	sp@(8),a0@
-
-|	fdivd	sp@(12),fp0	| y/x
-	movew	#0x5420,a0@(comm)
-	.long	0x0c688900, 0xfff067f8
-	movel	d0,a0@
-	movel	d1,a0@
-
-|	fatanx	fp0,fp0		| atan(y/x)
-	movew	#0x000a,a0@(comm)
-	.word	0x4a68,0xfff0,0x6bfa
-
-	bra 3f			| return
-1:				| x < 0
-
-|	fmovecr	#0,fp1		| get pi
-	movew	#0x5c80,a0@(comm)
-	.long	0x0c688900, 0xfff067f8
-
-|	fmoved	sp@(4),fp0	| get y
-	movew	#0x5400,a0@(comm)
-	.long	0x0c688900, 0xfff067f8
-	movel	sp@(4),a0@
-	movel	sp@(8),a0@
-
-|	fdivd	sp@(12),fp0	| y/x
-	movew	#0x5420,a0@(comm)
-	.long	0x0c688900, 0xfff067f8
-	movel	d0,a0@
-	movel	d1,a0@
-
-|	fatanx	fp0,fp0		| atan(y/x)
-	movew	#0x000a,a0@(comm)
-	.word	0x4a68,0xfff0,0x6bfa
-
-	btst	#31,sp@(4)	| sign(y)
-	beq	2f		| positive!
-
-|	fnegx	fp1,fp1		| transfer sign
-	movew	#0x049a,a0@(comm)
-	.word	0x4a68,0xfff0,0x6bfa
-
-2:|	faddx	fp1,fp0		| sign(y)*pi + atan(y/x)
-	movew	#0x0422,a0@(comm)
-	.word	0x4a68,0xfff0,0x6bfa
-
-|	bra 3f			| return
-3:
-|	fmoved	fp0,d0-d1	| return result
-	movew	#0x7400,a0@(comm)
-	.long	0x0c688900, 0xfff067f8
-	movel	a0@,d0
-	movel	a0@,d1
-
-4:	
-	rts			| sigh.
-5:				| x == 0
-	movel	#1073291771,d0	| pi/2
-	movel	#1413754136,d1	|
-
-	tstl	sp@(4)		| 
-	beq	6f		| NaN
-	bge	4b		| exit
-	bset	#31,d0		| x < 0 : return -pi/2
-	bra	4b
-6:	movel	#-1,d0		| NaN
-	movel	#-1,d1		|
-	bra	4b
-");	/* end asm	*/
-#endif	sfp004
+"	.ascii	\"atan2\\0\"\t\n"
+"	.even\t\n"
+".text\t\n"
+".even\t\n"
+".globl	_atan2\t\n"
+"_atan2:\t\n"
+"| denormalized numbers are treated as 0\t\n"
+"	lea	0xfffa50,a0\t\n"
+"	moveml	a7@(12),d0-d1	|  x\t\n"
+"	tstl	d0\t\n"
+"	beq	5f		| x == 0!\t\n"
+"	blt	1f		| x < 0!\t\n"
+"				| x > 0: return atan(y/x)\t\n"
+"\t\n"
+"|	fmoved	sp@(4),fp0	| get y\t\n"
+"	movew	#0x5400,a0@(comm)\t\n"
+"	.long	0x0c688900, 0xfff067f8\t\n"
+"	movel	sp@(4),a0@\t\n"
+"	movel	sp@(8),a0@\t\n"
+"\t\n"
+"|	fdivd	sp@(12),fp0	| y/x\t\n"
+"	movew	#0x5420,a0@(comm)\t\n"
+"	.long	0x0c688900, 0xfff067f8\t\n"
+"	movel	d0,a0@\t\n"
+"	movel	d1,a0@\t\n"
+"\t\n"
+"|	fatanx	fp0,fp0		| atan(y/x)\t\n"
+"	movew	#0x000a,a0@(comm)\t\n"
+"	.word	0x4a68,0xfff0,0x6bfa\t\n"
+"\t\n"
+"	bra 3f			| return\t\n"
+"1:				| x < 0\t\n"
+"\t\n"
+"|	fmovecr	#0,fp1		| get pi\t\n"
+"	movew	#0x5c80,a0@(comm)\t\n"
+"	.long	0x0c688900, 0xfff067f8\t\n"
+"\t\n"
+"|	fmoved	sp@(4),fp0	| get y\t\n"
+"	movew	#0x5400,a0@(comm)\t\n"
+"	.long	0x0c688900, 0xfff067f8\t\n"
+"	movel	sp@(4),a0@\t\n"
+"	movel	sp@(8),a0@\t\n"
+"\t\n"
+"|	fdivd	sp@(12),fp0	| y/x\t\n"
+"	movew	#0x5420,a0@(comm)\t\n"
+"	.long	0x0c688900, 0xfff067f8\t\n"
+"	movel	d0,a0@\t\n"
+"	movel	d1,a0@\t\n"
+"\t\n"
+"|	fatanx	fp0,fp0		| atan(y/x)\t\n"
+"	movew	#0x000a,a0@(comm)\t\n"
+"	.word	0x4a68,0xfff0,0x6bfa\t\n"
+"\t\n"
+"	btst	#31,sp@(4)	| sign(y)\t\n"
+"	beq	2f		| positive!\t\n"
+"\t\n"
+"|	fnegx	fp1,fp1		| transfer sign\t\n"
+"	movew	#0x049a,a0@(comm)\t\n"
+"	.word	0x4a68,0xfff0,0x6bfa\t\n"
+"\t\n"
+"2:|	faddx	fp1,fp0		| sign(y)*pi + atan(y/x)\t\n"
+"	movew	#0x0422,a0@(comm)\t\n"
+"	.word	0x4a68,0xfff0,0x6bfa\t\n"
+"\t\n"
+"|	bra 3f			| return\t\n"
+"3:\t\n"
+"|	fmoved	fp0,d0-d1	| return result\t\n"
+"	movew	#0x7400,a0@(comm)\t\n"
+"	.long	0x0c688900, 0xfff067f8\t\n"
+"	movel	a0@,d0\t\n"
+"	movel	a0@,d1\t\n"
+"\t\n"
+"4:	\t\n"
+"	rts			| sigh.\t\n"
+"5:				| x == 0\t\n"
+"	movel	#1073291771,d0	| pi/2\t\n"
+"	movel	#1413754136,d1	|\t\n"
+"\t\n"
+"	tstl	sp@(4)		| \t\n"
+"	beq	6f		| NaN\t\n"
+"	bge	4b		| exit\t\n"
+"	bset	#31,d0		| x < 0 : return -pi/2\t\n"
+"	bra	4b\t\n"
+"6:	movel	#-1,d0		| NaN\t\n"
+"	movel	#-1,d1		|\t\n"
+"	bra	4b\t\n"
+);	/* end asm	*/
+#endif /* sfp004 */

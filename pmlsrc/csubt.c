@@ -77,27 +77,27 @@ COMPLEX z2;
     z1.imag -= z2.imag;
     return (z1);
 }
-#endif !defined (__M68881__) && !defined (sfp004)
+#endif /* !defined (__M68881__) #endif !defined (__M68881__) && !defined (sfp004)#endif !defined (__M68881__) && !defined (sfp004) !defined (sfp004) */
 
 #ifdef	__M68881__
-__asm("
-.text
-.even
-_funcname:
-	.ascii	\"csubt\\0\"
-	.even
-
-.globl	_csubt
-_csubt:
-	fmoved	sp@(4),fp0
-	fsubd	sp@(20),fp0
-	fmoved	sp@(12),fp1
-	fsubd	sp@(28),fp1
-	movel	a1,d0		| pointer to result
-	fmoved	fp0,a1@		| return z.real
-	fmoved	fp1,a1@(8)	| return z.imag
-");	/* end asm	*/
-#endif	__M68881__
+__asm(
+".text\t\n"
+".even\t\n"
+"_funcname:\t\n"
+"	.ascii	\"csubt\\0\"\t\n"
+"	.even\t\n"
+"\t\n"
+".globl	_csubt\t\n"
+"_csubt:\t\n"
+"	fmoved	sp@(4),fp0\t\n"
+"	fsubd	sp@(20),fp0\t\n"
+"	fmoved	sp@(12),fp1\t\n"
+"	fsubd	sp@(28),fp1\t\n"
+"	movel	a1,d0		| pointer to result\t\n"
+"	fmoved	fp0,a1@		| return z.real\t\n"
+"	fmoved	fp1,a1@(8)	| return z.imag\t\n"
+);	/* end asm	*/
+#endif /* __M68881__ */
 
 #ifdef	sfp004
 __asm("
@@ -150,19 +150,19 @@ _csubt:
 	movel	a0@(zahl),a1@(8)
 	movel	a0@(zahl),a1@(12)
 ");	/* end asm	*/
-#endif	sfp004
+#endif /* sfp004 */
 
 #if defined (__M68881__) || defined (sfp004)
 # ifdef ERROR_CHECK	/* no error checking for now	*/
 
-__asm("	
-	pea	_funcname
-	jmp	c_err_check
-");	/* end asm	*/
+__asm(
+"	pea	_funcname\t\n"
+"	jmp	c_err_check\t\n"
+);	/* end asm	*/
 
-# else  ERROR_CHECK
+# else /* ERROR_CHECK */
 
 __asm("rts");
 
-# endif ERROR_CHECK
+# endif /* ERROR_CHECK */
 #endif defined (__M68881__) || defined (sfp004)

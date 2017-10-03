@@ -53,20 +53,20 @@
  */
 #if !defined (OLD)	/* mjr++	*/
 
-__asm("
-.text
-.even
-.globl _dabs
-.globl _fabs
+__asm(
+".text\t\n"
+".even\t\n"
+".globl _dabs\t\n"
+".globl _fabs\t\n"
+"\t\n"
+"_dabs:\t\n"
+"_fabs:\t\n"
+"	moveml	a7@(4),d0-d1\t\n"
+"	bclr	#31,d0\t\n"
+"	rts\t\n"
+);
 
-_dabs:
-_fabs:
-	moveml	a7@(4),d0-d1
-	bclr	#31,d0
-	rts
-");
-
-#else OLD
+#else /* OLD */
 
 #include <stdio.h>
 #include <math.h>
@@ -117,4 +117,4 @@ double x;
 }
 #endif
 
-#endif OLD
+#endif /* OLD */

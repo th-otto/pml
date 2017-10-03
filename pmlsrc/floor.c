@@ -3,7 +3,7 @@
  * 	from pete housels posting
  */
 
-#if !defined (__M68881__) || !defined (sfp004)
+#if !defined (__M68881__) && !defined (sfp004)
 #if __STDC__
 double	modf(double, double *);
 #else
@@ -32,7 +32,7 @@ double x;
 }
 #endif
 
-#ifdef __M68881_
+#ifdef __M68881__
 
 double ceil (double x)
 {
@@ -76,7 +76,7 @@ double floor (double x)
 		  : "dmi" (rounding_mode));
   return value;
 }
-#endif __M68881__
+#endif /* __M68881__ */
 
 #ifdef	sfp004
-#endif	sfp004
+#endif /* sfp004 */

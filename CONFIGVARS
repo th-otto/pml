@@ -1,0 +1,50 @@
+#
+# target and host compiler
+# 
+# Define this to "m68k-atari-mint" if you cross compile.
+ifneq ($(CROSS_TOOL),)
+ CROSSPREFIX=$(CROSS_TOOL)-
+ CROSS := yes
+else
+ifeq ($(CROSS),)
+EVAL_CROSS := case `uname -s` in *MiNT*) echo no;; *) echo yes; esac
+CROSS := $(shell $(EVAL_CROSS))
+endif
+ifeq ($(CROSS),yes)
+ CROSS_TOOL=m68k-atari-mint
+ CROSSPREFIX=$(CROSS_TOOL)-
+else
+ CROSSPREFIX=
+endif
+endif
+
+WITH_SHORT_LIBS = yes
+
+#
+# build alternate libraries for processor variants
+#
+WITH_020_LIB = yes
+WITH_V4E_LIB = yes
+
+ifeq ($(CROSS),yes)
+PREFIX=$(shell $(CROSSPREFIX)gcc -print-sysroot)/usr
+ifeq ($(PREFIX),)
+  PREFIX=/usr/$(CROSS_TOOL)
+endif
+else
+PREFIX=/usr
+endif
+
+
+CC = $(CROSSPREFIX)gcc
+AS = $(CC)
+AR = $(CROSSPREFIX)ar
+RANLIB = $(CROSSPREFIX)ranlib
+STRIP = $(CROSSPREFIX)strip
+FLAGS = $(CROSSPREFIX)flags
+
+CFLAGS = -O2 -fomit-frame-pointer -DIEEE -DNO_DBUG -I.
+
+CP    = cp
+RM    = rm -f
+MKDIR = mkdir

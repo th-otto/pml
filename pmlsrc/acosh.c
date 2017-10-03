@@ -85,7 +85,7 @@ double x;
 	xcpt.name = funcname;
 	xcpt.arg1 = x;
 	if (!matherr (&xcpt)) {
-	    fprintf (stderr, "%s: DOMAIN error\n", funcname);
+	    //fprintf (stderr, "%s: DOMAIN error\n", funcname);
 	    errno = ERANGE;
 	    xcpt.retval = HUGE_VAL;
 	}
@@ -94,7 +94,7 @@ double x;
 	xcpt.name = funcname;
 	xcpt.arg1 = x;
 	if (!matherr (&xcpt)) {
-	    fprintf (stderr, "%s: OVERFLOW error\n", funcname);
+	    //fprintf (stderr, "%s: OVERFLOW error\n", funcname);
 	    errno = ERANGE;
 	    x = SQRT_MAXDOUBLE;
 	    xcpt.retval = log (2* SQRT_MAXDOUBLE);

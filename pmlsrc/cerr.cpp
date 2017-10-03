@@ -70,7 +70,7 @@ error_nan:
 #endif	__MSHORT__
 error_exit:
 	pea	__iob+52	|
-	jbsr	_fprintf	|
+	//jbsr	_fprintf	|
 	addqw	#8,a7		| leave _funcname on stack
 	moveml	a7@+,d0/a1
 	bra	continue
@@ -115,7 +115,7 @@ error_nan_i:
 
 error_exit_i:
 	pea	__iob+52	|
-	jbsr	_fprintf	|
+	//jbsr	_fprintf	|
 	addqw	#8,a7		|
 	moveml	a7@+,d0/a1
 

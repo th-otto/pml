@@ -3,4 +3,5 @@
 .deps
 .lib*
 *.prg
+*.tos
 *.orig

@@ -48,7 +48,7 @@
 
 #ifndef NO_DBUG
 # define NO_DBUG
-#endif NO_DBUG
+#endif /* NO_DBUG */
 
 #ifndef NO_DBUG
 #    include <dbug.h>

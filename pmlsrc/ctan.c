@@ -78,7 +78,7 @@ COMPLEX z;
 
     if (ccosz.real == 0.0 && ccosz.imag == 0.0) {
 #ifdef	ERROR_CHECK
-	fputs (stderr, " ctan: SINGULARITY\n");
+	//fputs (stderr, " ctan: SINGULARITY\n");
 	errno = ERANGE;		/* should be EDOM if csinz.real or csinz.imag == 0	*/
 
 	if( csinz.real >= 0.0)	z.real = HUGE_VAL;	
@@ -87,9 +87,9 @@ COMPLEX z;
 	if( csinz.imag >= 0.0) 	z.imag = HUGE_VAL;
 					/* still wrong, == 0 should yield NAN */
 	else			z.imag = -HUGE_VAL;	
-#else	ERROR_CHECK
+#else /* ERROR_CHECK */
 	z = cdiv(csinz,ccosz);
-#endif	ERROR_CHECK
+#endif /* ERROR_CHECK */
     } else {
 	z = cdiv(csinz,ccosz);
     }
