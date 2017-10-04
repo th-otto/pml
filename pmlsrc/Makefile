@@ -65,35 +65,35 @@ objs: .lib$(TARGET)
 	$(AM_V_at)$(CP) Makefile.objs $@/Makefile
 
 install:
-	install -m 755 -d $(PREFIX)/lib
-	install -m 644 libpml.a $(PREFIX)/lib/libm.a
+	install -m 755 -d $(DESTDIR)$(PREFIX)/lib
+	install -m 644 libpml.a $(DESTDIR)$(PREFIX)/lib/libm.a
 ifeq ($(WITH_SHORT_LIBS),yes)
-	install -m 755 -d $(PREFIX)/lib/mshort
-	install -m 644 libpml16.a $(PREFIX)/lib/mshort/libm.a
+	install -m 755 -d $(DESTDIR)$(PREFIX)/lib/mshort
+	install -m 644 libpml16.a $(DESTDIR)$(PREFIX)/lib/mshort/libm.a
 endif
 ifeq ($(WITH_020_LIB),yes)
-	install -m 755 -d $(PREFIX)/lib/m68020-60
-	install -m 644 libpml020.a $(PREFIX)/lib/m68020-60/libm.a
+	install -m 755 -d $(DESTDIR)$(PREFIX)/lib/m68020-60
+	install -m 644 libpml020.a $(DESTDIR)$(PREFIX)/lib/m68020-60/libm.a
 ifeq ($(WITH_SHORT_LIBS),yes)
-	install -m 755 -d $(PREFIX)/lib/m68020-60/mshort
-	install -m 644 libpml02016.a $(PREFIX)/lib/m68020-60/mshort/libm.a
+	install -m 755 -d $(DESTDIR)$(PREFIX)/lib/m68020-60/mshort
+	install -m 644 libpml02016.a $(DESTDIR)$(PREFIX)/lib/m68020-60/mshort/libm.a
 endif
 endif
 ifeq ($(WITH_V4E_LIB),yes)
-	install -m 755 -d $(PREFIX)/lib/m5475
-	install -m 644 libpmlv4e.a $(PREFIX)/lib/m5475/libm.a
+	install -m 755 -d $(DESTDIR)$(PREFIX)/lib/m5475
+	install -m 644 libpmlv4e.a $(DESTDIR)$(PREFIX)/lib/m5475/libm.a
 ifeq ($(WITH_SHORT_LIBS),yes)
-	install -m 755 -d $(PREFIX)/lib/m5475/mshort
-	install -m 644 libpmlv4e16.a $(PREFIX)/lib/m5475/mshort/libm.a
+	install -m 755 -d $(DESTDIR)$(PREFIX)/lib/m5475/mshort
+	install -m 644 libpmlv4e16.a $(DESTDIR)$(PREFIX)/lib/m5475/mshort/libm.a
 endif
 endif
-	install -m 755 -d $(PREFIX)/include
-	install -m 644 math.h $(PREFIX)/include
+	install -m 755 -d $(DESTDIR)$(PREFIX)/include
+	install -m 644 math.h $(DESTDIR)$(PREFIX)/include
 
 uinstall:
 	for file in libm.a mshort/libm.a m68020-60/libm.a m68020-60/mshort/libm.a m5475/libm.a m5475/mshort/libm.a; do \
-		$(RM) $(PREFIX)/lib/$$file; \
+		$(RM) $(DESTDIR)$(PREFIX)/lib/$$file; \
 	done
 	for file in math.h; do \
-		$(RM) $(PREFIX)/include/$$file; \
+		$(RM) $(DESTDIR)$(PREFIX)/include/$$file; \
 	done
