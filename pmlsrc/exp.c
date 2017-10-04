@@ -201,7 +201,6 @@ eset:
 	xcpt.arg1 = x;
 	if (!matherr (&xcpt)) {
             errno = ERANGE;
-	    //fprintf (stderr, "%s: %sFLOW error\n", funcname, xcptstr);
 	}
     } else {
 	x *= LOG2E;
@@ -238,12 +237,6 @@ __asm(
     __asm(
 "\t\n"
 "\t\n"
-"_Overflow:\t\n"
-"	.ascii \"OVERFLOW\\0\"\t\n"
-"_Domain:\t\n"
-"	.ascii \"DOMAIN\\0\"\t\n"
-"_Error_String:\t\n"
-"	.ascii \"exp: %s error\\n\\0\"\t\n"
 ".even\t\n"
 "\t\n"
 "| pml compatible expgent\t\n"
@@ -323,13 +316,11 @@ __asm(
 "	swap	d0\t\n"
 "	moveml	d0-d1,a7@-\t\n"
 "	movel	#63,_errno	| NAN => errno = EDOM\t\n"
-"	pea	_Overflow	| for printf\t\n"
 "	bra	error_exit	|\t\n"
 "error_nan:\t\n"
 "	moveml	a0@(24),d0-d1	| result = +inf\t\n"
 "	moveml	d0-d1,a7@-\t\n"
 "	movel	#62,_errno	| NAN => errno = EDOM\t\n"
-"	pea	_Domain		| for printf\t\n"
 );
 #else	__MSHORT__
 __asm(
@@ -337,21 +328,15 @@ __asm(
 "	swap	d0\t\n"
 "	moveml	d0-d1,a7@-\t\n"
 "	movew	#63,_errno	| NAN => errno = EDOM\t\n"
-"	pea	_Overflow	| for printf\t\n"
 "	bra	error_exit	|\t\n"
 "error_nan:\t\n"
 "	moveml	a0@(24),d0-d1	| result = +inf\t\n"
 "	moveml	d0-d1,a7@-\t\n"
 "	movew	#62,_errno	| NAN => errno = EDOM\t\n"
-"	pea	_Domain		| for printf\t\n"
 );
 #endif	__MSHORT__
 __asm(
 "error_exit:\t\n"
-"	pea	_Error_String	|\t\n"
-"	pea	__iob+52	|\t\n"
-//"	jbsr	_fprintf	|\t\n"
-"	addl	#12,a7		|\t\n"
 "	moveml	a7@+,d0-d1\t\n"
 "	rts\t\n"
     );

@@ -95,7 +95,6 @@ double x;
 	xcpt.name = funcname;
 	xcpt.arg1 = x;
 	if (!matherr (&xcpt)) {
-	    //fprintf (stderr, "%s: DOMAIN error\n", funcname);
 	    errno = EDOM;
 	    xcpt.retval = HUGE_VAL;
 	}
@@ -130,12 +129,6 @@ __asm(
 
     __asm(
 "\t\n"
-"_Overflow:\t\n"
-"	.ascii \"OVERFLOW\\0\"\t\n"
-"_Domain:\t\n"
-"	.ascii \"DOMAIN\\0\"\t\n"
-"_Error_String:\t\n"
-"	.ascii \"asin: %s error\\n\\0\"\t\n"
 ".even\t\n"
 "\t\n"
 "| pml compatible asingent\t\n"
@@ -217,19 +210,16 @@ __asm(
 "	swap	d0"
 "	moveml	d0-d1,a7@-"
 "	movel	#63,_errno	| errno = ERANGE"
-"	pea	_Overflow	| for printf"
 "	bra	error_exit	|"
 "error_plus:"
 "	swap	d0"
 "	moveml	d0-d1,a7@-"
 "	movel	#63,_errno	| NAN => errno = EDOM"
-"	pea	_Overflow	| for printf"
 "	bra	error_exit	|"
 "error_nan:"
 "	moveml	a0@(24),d0-d1	| result = +inf"
 "	moveml	d0-d1,a7@-"
 "	movel	#62,_errno	| NAN => errno = EDOM"
-"	pea	_Domain		| for printf"
 );
 #else	/* __MSHORT__ */
 __asm(
@@ -237,27 +227,20 @@ __asm(
 "	swap	d0"
 "	moveml	d0-d1,a7@-"
 "	movew	#63,_errno	| errno = ERANGE"
-"	pea	_Overflow	| for printf"
 "	bra	error_exit	|"
 "error_plus:"
 "	swap	d0"
 "	moveml	d0-d1,a7@-"
 "	movew	#63,_errno	| NAN => errno = EDOM"
-"	pea	_Overflow	| for printf"
 "	bra	error_exit	|"
 "error_nan:"
 "	moveml	a0@(24),d0-d1	| result = +inf"
 "	moveml	d0-d1,a7@-"
 "	movew	#62,_errno	| NAN => errno = EDOM"
-"	pea	_Domain		| for printf"
 );
 #endif	/* __MSHORT__ */
 __asm(
 "error_exit:\t\n"
-"	pea	_Error_String	|\t\n"
-"	pea	__iob+52	|\t\n"
-//"	jbsr	_fprintf	|\t\n"
-"	addl	#12,a7		|\t\n"
 "	moveml	a7@+,d0-d1\t\n"
 "	rts\t\n"
     );

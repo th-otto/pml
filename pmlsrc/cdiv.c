@@ -92,7 +92,6 @@ COMPLEX zden;
 	xcpt.name = "cdiv";
 	xcpt.arg1 = denom;
 	if (!matherr (&xcpt)) {
-	    //fprintf (stderr, "%s:  ZERO_CMPLX_DENOMINATOR \n", xcpt.name);
 	    xcpt.retval = 0.0;	/* useless in this context */
 	    errno = ERANGE;	/* should be EDOM if real or imag == 0	*/
 	}

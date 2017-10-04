@@ -81,7 +81,6 @@ double x;
 	xcpt.name = funcname;
 	xcpt.arg1 = x;
 	if (!matherr (&xcpt)) {
-	    //fprintf (stderr, "%s: OVERFLOW error\n", funcname);
 	    errno = ERANGE;
 	    xcpt.retval = HUGE_VAL;
 	}
@@ -90,7 +89,6 @@ double x;
 	xcpt.name = funcname;
 	xcpt.arg1 = x;
 	if (!matherr (&xcpt)) {
-	    //fprintf (stderr, "%s: UNDERFLOW error\n", funcname);
 	    errno = ERANGE;
 	    xcpt.retval = 0.0;
 	}
@@ -121,12 +119,6 @@ __asm(
     __asm(
 "\t\n"
 "\t\n"
-"_Overflow:\t\n"
-"	.ascii \"OVERFLOW\\0\"\t\n"
-"_Domain:\t\n"
-"	.ascii \"DOMAIN\\0\"\t\n"
-"_Error_String:\t\n"
-"	.ascii \"sinh: %s error\\n\\0\"\t\n"
 ".even\t\n"
 "| m.ritzert 7.12.1991\t\n"
 "| ritzert@dfg.dbp.de\t\n"
@@ -205,19 +197,16 @@ __asm(
 "	swap	d0\t\n"
 "	moveml	d0-d1,a7@-\t\n"
 "	movel	#63,_errno	| errno = ERANGE\t\n"
-"	pea	_Overflow	| for printf\t\n"
 "	bra	error_exit	|\t\n"
 "error_plus:\t\n"
 "	swap	d0\t\n"
 "	moveml	d0-d1,a7@-\t\n"
 "	movel	#63,_errno	| NAN => errno = EDOM\t\n"
-"	pea	_Overflow	| for printf\t\n"
 "	bra	error_exit	|\t\n"
 "error_nan:\t\n"
 "	moveml	a0@(24),d0-d1	| result = +inf\t\n"
 "	moveml	d0-d1,a7@-\t\n"
 "	movel	#62,_errno	| NAN => errno = EDOM\t\n"
-"	pea	_Domain		| for printf\t\n"
 );
 #else	__MSHORT__
 __asm(
@@ -225,27 +214,20 @@ __asm(
 "	swap	d0\t\n"
 "	moveml	d0-d1,a7@-\t\n"
 "	movew	#63,_errno	| errno = ERANGE\t\n"
-"	pea	_Overflow	| for printf\t\n"
 "	bra	error_exit	|\t\n"
 "error_plus:\t\n"
 "	swap	d0\t\n"
 "	moveml	d0-d1,a7@-\t\n"
 "	movew	#63,_errno	| NAN => errno = EDOM\t\n"
-"	pea	_Overflow	| for printf\t\n"
 "	bra	error_exit	|\t\n"
 "error_nan:\t\n"
 "	moveml	a0@(24),d0-d1	| result = +inf\t\n"
 "	moveml	d0-d1,a7@-\t\n"
 "	movew	#62,_errno	| NAN => errno = EDOM\t\n"
-"	pea	_Domain		| for printf\t\n"
 );
 #endif	/* __MSHORT__ */
 __asm(
 "error_exit:\t\n"
-"	pea	_Error_String	|\t\n"
-"	pea	__iob+52	|\t\n"
-//"	jbsr	_fprintf	|\t\n"
-"	addl	#12,a7		|\t\n"
 "	moveml	a7@+,d0-d1\t\n"
 "	rts\t\n"
     );

@@ -79,7 +79,6 @@ COMPLEX z;
 	xcpt.name = "crcp";
 	xcpt.arg1 = denom;
 	if (!matherr (&xcpt)) {
-	    //fprintf (stderr, "%s: ZERO_CMPLX_DENOMINATOR \n", xcpt.name);
 	    errno = ERANGE;
 	    xcpt.retval = 0.0;	/* useless in this context */
 	}

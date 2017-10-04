@@ -78,7 +78,6 @@ COMPLEX z;
 
     if (ccosz.real == 0.0 && ccosz.imag == 0.0) {
 #ifdef	ERROR_CHECK
-	//fputs (stderr, " ctan: SINGULARITY\n");
 	errno = ERANGE;		/* should be EDOM if csinz.real or csinz.imag == 0	*/
 
 	if( csinz.real >= 0.0)	z.real = HUGE_VAL;	

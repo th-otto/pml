@@ -111,7 +111,6 @@ double x;
 	    xcpt.arg1 = x;
 	    xcpt.retval = result;
 	    if (!matherr(&xcpt)) {
-		//fprintf (stderr, "%s: DOMAIN error\n", funcname);
 		errno = EDOM;
 	    }
 	} else {
