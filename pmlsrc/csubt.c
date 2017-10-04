@@ -89,13 +89,13 @@ __asm(
 "\t\n"
 ".globl	_csubt\t\n"
 "_csubt:\t\n"
-"	fmoved	sp@(4),fp0\t\n"
-"	fsubd	sp@(20),fp0\t\n"
-"	fmoved	sp@(12),fp1\t\n"
-"	fsubd	sp@(28),fp1\t\n"
-"	movel	a1,d0		| pointer to result\t\n"
-"	fmoved	fp0,a1@		| return z.real\t\n"
-"	fmoved	fp1,a1@(8)	| return z.imag\t\n"
+"	fmoved	%sp@(4),%fp0\t\n"
+"	fsubd	%sp@(20),%fp0\t\n"
+"	fmoved	%sp@(12),%fp1\t\n"
+"	fsubd	%sp@(28),%fp1\t\n"
+"	movel	%a1,%d0		| pointer to result\t\n"
+"	fmoved	%fp0,%a1@		| return z.real\t\n"
+"	fmoved	%fp1,%a1@(8)	| return z.imag\t\n"
 );	/* end asm	*/
 #endif /* __M68881__ */
 
@@ -116,39 +116,39 @@ _funcname:
 .even
 .globl	_csubt
 _csubt:
-	lea	0xfffa50,a0
-	movew	#0x5400,a0@(comm)	| z1.real -> fp0
+	lea	0xfffa50,%a0
+	movew	#0x5400,%a0@(comm)	| z1.real -> fp0
 	.long	0x0c688900, 0xfff067f8
-	movel	a7@(4),a0@		| load arg_hi
-	movel	a7@(8),a0@		| load arg_low
+	movel	%a7@(4),%a0@		| load arg_hi
+	movel	%a7@(8),%a0@		| load arg_low
 
-	movew	#0x5428,a0@(comm)	| fp0 -= z2.real
+	movew	#0x5428,%a0@(comm)	| fp0 -= z2.real
 	.long	0x0c688900, 0xfff067f8
-	movel	a7@(20),a0@		| load arg_hi
-	movel	a7@(24),a0@		| load arg_low
+	movel	%a7@(20),%a0@		| load arg_hi
+	movel	%a7@(24),%a0@		| load arg_low
 
-	movew	#0x5480,a0@(comm)	| z1.imag -> fp1
+	movew	#0x5480,%a0@(comm)	| z1.imag -> fp1
 	.long	0x0c688900, 0xfff067f8
-	movel	a7@(12),a0@		| load arg_hi
-	movel	a7@(16),a0@		| load arg_low
+	movel	%a7@(12),%a0@		| load arg_hi
+	movel	%a7@(16),%a0@		| load arg_low
 
-	movew	#0x54a8,a0@(comm)	| fp1 -= z2.imag
-	movel	a1,d0			| pointer to result
+	movew	#0x54a8,%a0@(comm)	| fp1 -= z2.imag
+	movel	%a1,%d0			| pointer to result
 	.long	0x0c688900, 0xfff067f8
-	movel	a7@(28),a0@		| load arg_hi
-	movel	a7@(32),a0@		| load arg_low
+	movel	%a7@(28),%a0@		| load arg_hi
+	movel	%a7@(32),%a0@		| load arg_low
 
-|	movew	#%0111 0101 0000 0000,a0@(comm)	| fetch fp0
-	movew	#0x7400,a0@(comm)		| 
+|	movew	#%0111 0101 0000 0000,%a0@(comm)	| fetch fp0
+	movew	#0x7400,%a0@(comm)		| 
 	.long	0x0c688900, 0xfff067f8
-	movel	a0@(zahl),a1@
-	movel	a0@(zahl),a1@(4)
+	movel	%a0@(zahl),%a1@
+	movel	%a0@(zahl),%a1@(4)
 
-|	movew	#%0111 0100 1000 0000,a0@(comm)	| fetch fp1
-	movew	#0x7480,a0@(comm)		|
+|	movew	#%0111 0100 1000 0000,%a0@(comm)	| fetch fp1
+	movew	#0x7480,%a0@(comm)		|
 	.long	0x0c688900, 0xfff067f8
-	movel	a0@(zahl),a1@(8)
-	movel	a0@(zahl),a1@(12)
+	movel	%a0@(zahl),%a1@(8)
+	movel	%a0@(zahl),%a1@(12)
 ");	/* end asm	*/
 #endif /* sfp004 */
 

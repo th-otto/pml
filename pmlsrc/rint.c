@@ -46,11 +46,11 @@ double rint(double x)
 #if 0
   int rounding_mode, round_nearest;
 
-  __asm volatile ("fmove%.l fpcr,%0"
+  __asm volatile ("fmove%.l %%fpcr,%0"
 		  : "=dm" (rounding_mode)
 		  : /* no inputs */ );
   round_nearest = rounding_mode & ~0x30;
-  __asm volatile ("fmove%.l %0,fpcr"
+  __asm volatile ("fmove%.l %0,%%fpcr"
 		  : /* no outputs */
 		  : "dmi" (round_nearest));
 #endif
@@ -58,7 +58,7 @@ double rint(double x)
 		  : "=f" (value)
 		  : "f" (x));
 #if 0
-  __asm volatile ("fmove%.l %0,fpcr"
+  __asm volatile ("fmove%.l %0,%%fpcr"
 		  : /* no outputs */
 		  : "dmi" (rounding_mode));
 #endif
@@ -85,17 +85,17 @@ __asm(
 "	.globl _rint\t\n"
 ".even\t\n"
 "_rint:\t\n"
-"	lea	0xfffa50,a0\t\n"
-"|	movew	#0x5403,a0@(comm)	| fintrz to fp0\t\n"
-"	movew	#0x5401,a0@(comm)	| fint   to fp0\t\n"
-"	cmpiw	#0x8900,a0@(resp)	| check\t\n"
-"	movel	a7@(4),a0@		| load arg_hi\t\n"
-"	movel	a7@(8),a0@		| load arg_low\t\n"
-"	movew	#0x7400,a0@(comm)	| result to d0\t\n"
+"	lea	0xfffa50,%a0\t\n"
+"|	movew	#0x5403,%a0@(comm)	| fintrz to fp0\t\n"
+"	movew	#0x5401,%a0@(comm)	| fint   to fp0\t\n"
+"	cmpiw	#0x8900,%a0@(resp)	| check\t\n"
+"	movel	%a7@(4),%a0@		| load arg_hi\t\n"
+"	movel	%a7@(8),%a0@		| load arg_low\t\n"
+"	movew	#0x7400,%a0@(comm)	| result to d0\t\n"
 "| wait\t\n"
 "	.long	0x0c688900, 0xfff067f8\t\n"
-"	movel	a0@,d0\t\n"
-"	movel	a0@,d1\t\n"
+"	movel	%a0@,%d0\t\n"
+"	movel	%a0@,%d1\t\n"
 " 	rts\t\n"
 "\t\n"
 );

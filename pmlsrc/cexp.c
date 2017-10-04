@@ -100,17 +100,17 @@ __asm(
 "	.even\t\n"
 "	.globl _cexp\t\n"
 "_cexp:\t\n"
-"	fmovex	fp2,sp@-	| 12 Bytes\t\n"
-"	movel	a1,d0		| save a1 as return value\t\n"
-"	fetoxd	a7@(16),fp0	| exp( z.real )\t\n"
-"	fmoved	a7@(24),fp2\t\n"
-"	fcosx	fp2,fp1\t\n"
-"	fsinx	fp2,fp2\t\n"
-"	fmulx	fp0,fp1		|\t\n"
-"	fmulx	fp0,fp2		|\t\n"
-"	fmoved	fp1,a1@		| fetch result.real\t\n"
-"	fmoved	fp2,a1@(8)	| fetch result.imag\t\n"
-"	fmovex	sp@+,fp2\t\n"
+"	fmovex	%fp2,%sp@-	| 12 Bytes\t\n"
+"	movel	%a1,%d0		| save a1 as return value\t\n"
+"	fetoxd	%a7@(16),%fp0	| exp( z.real )\t\n"
+"	fmoved	%a7@(24),%fp2\t\n"
+"	fcosx	%fp2,%fp1\t\n"
+"	fsinx	%fp2,%fp2\t\n"
+"	fmulx	%fp0,%fp1		|\t\n"
+"	fmulx	%fp0,%fp2		|\t\n"
+"	fmoved	%fp1,%a1@		| fetch result.real\t\n"
+"	fmoved	%fp2,%a1@(8)	| fetch result.imag\t\n"
+"	fmovex	%sp@+,%fp2\t\n"
 );	/* end asm	*/
 #endif /* __M68881__ */
 
@@ -135,12 +135,12 @@ zahl =	  0
 | waiting loop ...
 |
 | wait:
-| ww:	cmpiw	#0x8900,a1@(resp)
+| ww:	cmpiw	#0x8900,%a1@(resp)
 | 	beq	ww
 | is coded directly by
 |	.long	0x0c688900, 0xfff067f8
 | and
-| www:	tst.b	a1@(resp)
+| www:	tst.b	%a1@(resp)
 |	bmi.b	www
 | is coded by
 |	.word	0x4a68,0xfff0,0x6bfa		| test
@@ -148,38 +148,38 @@ zahl =	  0
 	.text; .even
 	.globl _cexp
 _cexp:
-	movel	a1,d0				| save a1 as return value
-	lea	0xfffa50,a0			| fpu address
-	movew	#0x5410,a0@(comm)		| exp()
-	cmpiw	#0x8900,a0@(resp)		| check
-	movel	a7@(4),a0@			| load arg_hi
-	movel	a7@(8),a0@			| load arg_low
+	movel	%a1,%d0				| save a1 as return value
+	lea	0xfffa50,%a0			| fpu address
+	movew	#0x5410,%a0@(comm)		| exp()
+	cmpiw	#0x8900,%a0@(resp)		| check
+	movel	%a7@(4),%a0@			| load arg_hi
+	movel	%a7@(8),%a0@			| load arg_low
 
-|	movew	#%0101 0101 0011 0001,a0@(comm)	| sincos: sin -> fp2
-	movew	#0x5531,a0@(comm)		| sincos: sin -> fp2
+|	movew	#%0101 0101 0011 0001,%a0@(comm)	| sincos: sin -> fp2
+	movew	#0x5531,%a0@(comm)		| sincos: sin -> fp2
 	.long	0x0c688900, 0xfff067f8
-	movel	a7@(12),a0@			| load arg_hi
-	movel	a7@(16),a0@			| load arg_low
+	movel	%a7@(12),%a0@			| load arg_hi
+	movel	%a7@(16),%a0@			| load arg_low
 
-|	movew	#%0000 0000 1010 0011,a0@(comm)	| mul fp0 -> fp1
-	movew	#0x00a3,a0@(comm)		| mul fp0 -> fp1
+|	movew	#%0000 0000 1010 0011,%a0@(comm)	| mul fp0 -> fp1
+	movew	#0x00a3,%a0@(comm)		| mul fp0 -> fp1
 	.word	0x4a68,0xfff0,0x6bfa		| test
 
-|	movew	#%0000 0001 0010 0011,a0@(comm)	| mul fp0 -> fp2
-	movew	#0x0123,a0@(comm)		| mul fp0 -> fp2
+|	movew	#%0000 0001 0010 0011,%a0@(comm)	| mul fp0 -> fp2
+	movew	#0x0123,%a0@(comm)		| mul fp0 -> fp2
 	.word	0x4a68,0xfff0,0x6bfa		| test
 
-|	movew	#%0111 0100 1000 0000,a0@(comm)	| fetch fp1
-	movew	#0x7480,a0@(comm)		|
+|	movew	#%0111 0100 1000 0000,%a0@(comm)	| fetch fp1
+	movew	#0x7480,%a0@(comm)		|
 	.long	0x0c688900, 0xfff067f8
-	movel	a0@(zahl),a1@
-	movel	a0@(zahl),a1@(4)
+	movel	%a0@(zahl),%a1@
+	movel	%a0@(zahl),%a1@(4)
 
-|	movew	#%0111 0101 0000 0000,a0@(comm)	| fetch fp2
-	movew	#0x7500,a0@(comm)		| 
+|	movew	#%0111 0101 0000 0000,%a0@(comm)	| fetch fp2
+	movew	#0x7500,%a0@(comm)		| 
 	.long	0x0c688900, 0xfff067f8
-	movel	a0@(zahl),a1@(8)
-	movel	a0@(zahl),a1@(12)
+	movel	%a0@(zahl),%a1@(8)
+	movel	%a0@(zahl),%a1@(12)
 ");	/* end asm	*/
 #endif /* sfp004 */
 

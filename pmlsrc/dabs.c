@@ -61,8 +61,8 @@ __asm(
 "\t\n"
 "_dabs:\t\n"
 "_fabs:\t\n"
-"	moveml	a7@(4),d0-d1\t\n"
-"	bclr	#31,d0\t\n"
+"	moveml	%a7@(4),%d0-%d1\t\n"
+"	bclr	#31,%d0\t\n"
 "	rts\t\n"
 );
 

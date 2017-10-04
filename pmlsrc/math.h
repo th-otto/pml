@@ -131,12 +131,10 @@ struct exception
 extern const double _infinitydf;	/* in normdf.cpp */
 
 
-#ifndef _INLINE_MATH
-# if 0 /*defined(__GNUC_INLINE__) && (!defined(NO_INLINE_MATH)) && (defined(_M68881) || defined(__M68881__))*/
+#if defined(__GNUC_INLINE__) && (!defined(NO_INLINE_MATH)) && (defined(_M68881) || defined(__M68881__))
 #  define _INLINE_MATH 1
-# else
+#else
 #  define _INLINE_MATH 0
-# endif
 #endif
 
 #if _INLINE_MATH

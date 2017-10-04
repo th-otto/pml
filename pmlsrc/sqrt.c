@@ -269,23 +269,23 @@ __asm(
 #ifdef	__M68881__
 
     __asm(
-"	fsqrtd	a7@(4), fp0	| sqrt\t\n"
-"	fmoved	fp0,a7@-	| push result\t\n"
-"	moveml	a7@+,d0-d1	| return_value\t\n"
+"	fsqrtd	%a7@(4), %fp0	| sqrt\t\n"
+"	fmoved	%fp0,%a7@-	| push result\t\n"
+"	moveml	%a7@+,%d0-%d1	| return_value\t\n"
     );	/* end asm	*/
 
 #endif /* __M68881__ */
 #ifdef	sfp004
     __asm(
-"	lea	0xfffa50,a0\t\n"
-"	movew	#0x5404,a0@(comm)	| specify function\t\n"
-"	cmpiw	#0x8900,a0@(resp)	| check\t\n"
-"	movel	a7@(4),a0@		| load arg_hi\t\n"
-"	movel	a7@(8),a0@		| load arg_low\t\n"
-"	movew	#0x7400,a0@(comm)	| result to d0\t\n"
+"	lea	0xfffa50,%a0\t\n"
+"	movew	#0x5404,%a0@(comm)	| specify function\t\n"
+"	cmpiw	#0x8900,%a0@(resp)	| check\t\n"
+"	movel	%a7@(4),%a0@		| load arg_hi\t\n"
+"	movel	%a7@(8),%a0@		| load arg_low\t\n"
+"	movew	#0x7400,%a0@(comm)	| result to d0\t\n"
 "	.long	0x0c688900, 0xfff067f8	| wait\t\n"
-"	movel	a0@,d0\t\n"
-"	movel	a0@,d1\t\n"
+"	movel	%a0@,%d0\t\n"
+"	movel	%a0@,%d1\t\n"
 );	/* end asm	*/
 
 #endif /* sfp004 */
@@ -293,43 +293,43 @@ __asm(
 # ifdef	ERROR_CHECK
     __asm(
 "err:\t\n"
-"	lea	double_max,a0	|\t\n"
-"	swap	d0		| exponent into lower word\t\n"
-"	cmpw	a0@(16),d0	| == NaN ?\t\n"
+"	lea	double_max,%a0	|\t\n"
+"	swap	%d0		| exponent into lower word\t\n"
+"	cmpw	%a0@(16),%d0	| == NaN ?\t\n"
 "	beq	error_nan	|\t\n"
-"	cmpw	a0@(24),d0	| == + Infinity ?\t\n"
+"	cmpw	%a0@(24),%d0	| == + Infinity ?\t\n"
 "	beq	error_plus	|\t\n"
-"	swap	d0		| result ok,\t\n"
+"	swap	%d0		| result ok,\t\n"
 "	rts			| restore d0\t\n"
 );
 #ifndef	__MSHORT__
 __asm(
 "error_plus:\t\n"
-"	swap	d0\t\n"
-"	moveml	d0-d1,a7@-\t\n"
+"	swap	%d0\t\n"
+"	moveml	%d0-%d1,%a7@-\t\n"
 "	movel	#63,_errno	| NAN => errno = EDOM\t\n"
 "	bra	error_exit	|\t\n"
 "error_nan:\t\n"
-"	moveml	a0@(24),d0-d1	| result = +inf\t\n"
-"	moveml	d0-d1,a7@-\t\n"
+"	moveml	%a0@(24),%d0-%d1	| result = +inf\t\n"
+"	moveml	%d0-%d1,%a7@-\t\n"
 "	movel	#62,_errno	| NAN => errno = EDOM\t\n"
 );
 #else	__MSHORT__
 __asm(
 "error_plus:\t\n"
-"	swap	d0\t\n"
-"	moveml	d0-d1,a7@-\t\n"
+"	swap	%d0\t\n"
+"	moveml	%d0-%d1,%a7@-\t\n"
 "	movew	#63,_errno	| NAN => errno = EDOM\t\n"
 "	bra	error_exit	|\t\n"
 "error_nan:\t\n"
-"	moveml	a0@(24),d0-d1	| result = +inf\t\n"
-"	moveml	d0-d1,a7@-\t\n"
+"	moveml	%a0@(24),%d0-%d1	| result = +inf\t\n"
+"	moveml	%d0-%d1,%a7@-\t\n"
 "	movew	#62,_errno	| NAN => errno = EDOM\t\n"
 );
 #endif	/* __MSHORT__ */
 __asm(
 "error_exit:\t\n"
-"	moveml	a7@+,d0-d1\t\n"
+"	moveml	%a7@+,%d0-%d1\t\n"
 );
 # endif	/* ERROR_CHECK */
 __asm(
@@ -341,46 +341,46 @@ __asm(
 #endif /* __M68881__ || sfp004	*/
 #ifdef __M68881__
 __asm(
-"	fmoved	a7@(4),fp0	|\t\n"
-"	fmulx	fp0,fp0		| x**2\t\n"
-"	fmoved	a7@(12),fp1	|\t\n"
-"	fmulx	fp1,fp1		| y**2\t\n"
-"	faddx	fp1,fp0		|\t\n"
-"	fsqrtx	fp0,fp0		| sqrt( x**2 + y**2 )\t\n"
-"	fmoved	fp0,a7@-	|\t\n"
-"	moveml	a7@+,d0-d1	| return arg\t\n"
+"	fmoved	%a7@(4),%fp0	|\t\n"
+"	fmulx	%fp0,%fp0		| x**2\t\n"
+"	fmoved	%a7@(12),%fp1	|\t\n"
+"	fmulx	%fp1,%fp1		| y**2\t\n"
+"	faddx	%fp1,%fp0		|\t\n"
+"	fsqrtx	%fp0,%fp0		| sqrt( x**2 + y**2 )\t\n"
+"	fmoved	%fp0,%a7@-	|\t\n"
+"	moveml	%a7@+,%d0-%d1	| return arg\t\n"
 );
 #endif /* __M68881__ */
 #ifdef	sfp004
 __asm(
-"	lea	0xfffa50,a0\t\n"
+"	lea	0xfffa50,%a0\t\n"
 "\t\n"
-"	movew	#0x5400,a0@(comm)	| load fp0\t\n"
+"	movew	#0x5400,%a0@(comm)	| load fp0\t\n"
 "	.long	0x0c688900, 0xfff067f8\t\n"
-"	movel	a7@(4),a0@		| load arg_hi\t\n"
-"	movel	a7@(8),a0@		| load arg_low\t\n"
+"	movel	%a7@(4),%a0@		| load arg_hi\t\n"
+"	movel	%a7@(8),%a0@		| load arg_low\t\n"
 "\t\n"
-"	movew	#0x5480,a0@(comm)	| load fp1\t\n"
+"	movew	#0x5480,%a0@(comm)	| load fp1\t\n"
 "	.long	0x0c688900, 0xfff067f8\t\n"
-"	movel	a7@(12),a0@		| load arg_hi\t\n"
-"	movel	a7@(16),a0@		| load arg_low\t\n"
+"	movel	%a7@(12),%a0@		| load arg_hi\t\n"
+"	movel	%a7@(16),%a0@		| load arg_low\t\n"
 "\t\n"
-"	movew	#0x0023,a0@(comm)\t\n"
+"	movew	#0x0023,%a0@(comm)\t\n"
 "	.word	0x4a68,0xfff0,0x6bfa	| test\t\n"
 "\t\n"
-"	movew	#0x04a3,a0@(comm)\t\n"
+"	movew	#0x04a3,%a0@(comm)\t\n"
 "	.word	0x4a68,0xfff0,0x6bfa	| test\t\n"
 "\t\n"
-"	movew	#0x0422,a0@(comm)	| fp0 = fp0 + fp1	\t\n"
+"	movew	#0x0422,%a0@(comm)	| fp0 = fp0 + fp1	\t\n"
 "	.word	0x4a68,0xfff0,0x6bfa	| test\t\n"
 "\t\n"
-"	movew	#0x0004,a0@(comm)	| sqrt(fp0)\t\n"
+"	movew	#0x0004,%a0@(comm)	| sqrt(fp0)\t\n"
 "	.word	0x4a68,0xfff0,0x6bfa	| test\t\n"
 "\t\n"
-"	movew	#0x7400,a0@(comm)	| result to d0/d1\t\n"
+"	movew	#0x7400,%a0@(comm)	| result to d0/d1\t\n"
 "	.long	0x0c688900, 0xfff067f8\t\n"
-"	movel	a0@(zahl),d0\t\n"
-"	movel	a0@(zahl),d1\t\n"
+"	movel	%a0@(zahl),%d0\t\n"
+"	movel	%a0@(zahl),%d1\t\n"
 );
 #endif /* sfp004 */
 #if ( defined (__M68881__) || defined (sfp004) ) && defined (ERROR_CHECK)

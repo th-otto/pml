@@ -90,23 +90,23 @@ __asm(
 "\t\n"
 ".globl	_cmult\t\n"
 "_cmult:\t\n"
-"	fmoved	sp@(4),fp0\t\n"
-"	fmoved	sp@(12),fp1\t\n"
-"	fmoved	sp@(20),fp2\t\n"
-"	fmoved	sp@(28),fp3\t\n"
-"	fmovex	fp0,fp4\t\n"
-"	movel	a1,d0		| pointer to result\t\n"
+"	fmoved	%sp@(4),%fp0\t\n"
+"	fmoved	%sp@(12),%fp1\t\n"
+"	fmoved	%sp@(20),%fp2\t\n"
+"	fmoved	%sp@(28),%fp3\t\n"
+"	fmovex	%fp0,%fp4\t\n"
+"	movel	%a1,%d0		| pointer to result\t\n"
 "\t\n"
-"	fmulx	fp2,fp4\t\n"
-"	fmulx	fp3,fp0\t\n"
-"	fmulx	fp1,fp2\t\n"
-"	fmulx	fp1,fp3\t\n"
+"	fmulx	%fp2,%fp4\t\n"
+"	fmulx	%fp3,%fp0\t\n"
+"	fmulx	%fp1,%fp2\t\n"
+"	fmulx	%fp1,%fp3\t\n"
 "\t\n"
-"	fsubx	fp3,fp4\t\n"
-"	faddx	fp0,fp2\t\n"
+"	fsubx	%fp3,%fp4\t\n"
+"	faddx	%fp0,%fp2\t\n"
 "\t\n"
-"	fmoved	fp4,a1@\t\n"
-"	fmoved	fp2,a1@(8)\t\n"
+"	fmoved	%fp4,%a1@\t\n"
+"	fmoved	%fp2,%a1@(8)\t\n"
 );	/* end asm	*/
 #endif /* __M68881__ */
 
@@ -128,62 +128,62 @@ _funcname:
 .globl	_cmult
 _cmult:
 
-	lea	0xfffa50,a0
+	lea	0xfffa50,%a0
 
-	movew	#0x5400,a0@(comm)	| z1.real -> fp0
-	movel	a1,d0		| pointer to result
+	movew	#0x5400,%a0@(comm)	| z1.real -> fp0
+	movel	%a1,%d0		| pointer to result
 	.long	0x0c688900, 0xfff067f8
-	movel	a7@(4),a0@		| load arg_hi
-	movel	a7@(8),a0@		| load arg_low
+	movel	%a7@(4),%a0@		| load arg_hi
+	movel	%a7@(8),%a0@		| load arg_low
 
-	movew	#0x5480,a0@(comm)	| z1.imag -> fp1
+	movew	#0x5480,%a0@(comm)	| z1.imag -> fp1
 	.long	0x0c688900, 0xfff067f8
-	movel	a7@(12),a0@		| load arg_hi
-	movel	a7@(16),a0@		| load arg_low
+	movel	%a7@(12),%a0@		| load arg_hi
+	movel	%a7@(16),%a0@		| load arg_low
 
-	movew	#0x5500,a0@(comm)	| z2.real -> fp2
+	movew	#0x5500,%a0@(comm)	| z2.real -> fp2
 	.long	0x0c688900, 0xfff067f8
-	movel	a7@(20),a0@		| load arg_hi
-	movel	a7@(24),a0@		| load arg_low
+	movel	%a7@(20),%a0@		| load arg_hi
+	movel	%a7@(24),%a0@		| load arg_low
 
-	movew	#0x5580,a0@(comm)	| z2.imag -> fp3
+	movew	#0x5580,%a0@(comm)	| z2.imag -> fp3
 	.long	0x0c688900, 0xfff067f8
-	movel	a7@(28),a0@		| load arg_hi
-	movel	a7@(32),a0@		| load arg_low
+	movel	%a7@(28),%a0@		| load arg_hi
+	movel	%a7@(32),%a0@		| load arg_low
 
-	movew	#0x0200,a0@(comm)	| copy fp0 to fp4
-	.word	0x4a68,0xfff0,0x6bfa	| test
-
-|	fmulx	fp2,fp4
-	movew	#0x0a23,a0@(comm)
-	.word	0x4a68,0xfff0,0x6bfa	| test
-|	fmulx	fp3,fp0
-	movew	#0x0c23,a0@(comm)
-	.word	0x4a68,0xfff0,0x6bfa	| test
-|	fmulx	fp1,fp2
-	movew	#0x0523,a0@(comm)
-	.word	0x4a68,0xfff0,0x6bfa	| test
-|	fmulx	fp1,fp3
-	movew	#0x05a3,a0@(comm)
-	.word	0x4a68,0xfff0,0x6bfa	| test
-|	fsubx	fp3,fp4
-	movew	#0x0e28,a0@(comm)
-	.word	0x4a68,0xfff0,0x6bfa	| test
-|	faddx	fp0,fp2
-	movew	#0x0122,a0@(comm)
+	movew	#0x0200,%a0@(comm)	| copy fp0 to fp4
 	.word	0x4a68,0xfff0,0x6bfa	| test
 
-|	fmoved	fp4,a1@
-	movew	#0x7600,a0@(comm)		| 
+|	fmulx	%fp2,%fp4
+	movew	#0x0a23,%a0@(comm)
+	.word	0x4a68,0xfff0,0x6bfa	| test
+|	fmulx	%fp3,%fp0
+	movew	#0x0c23,%a0@(comm)
+	.word	0x4a68,0xfff0,0x6bfa	| test
+|	fmulx	%fp1,%fp2
+	movew	#0x0523,%a0@(comm)
+	.word	0x4a68,0xfff0,0x6bfa	| test
+|	fmulx	%fp1,%fp3
+	movew	#0x05a3,%a0@(comm)
+	.word	0x4a68,0xfff0,0x6bfa	| test
+|	fsubx	%fp3,%fp4
+	movew	#0x0e28,%a0@(comm)
+	.word	0x4a68,0xfff0,0x6bfa	| test
+|	faddx	%fp0,%fp2
+	movew	#0x0122,%a0@(comm)
+	.word	0x4a68,0xfff0,0x6bfa	| test
+
+|	fmoved	%fp4,%a1@
+	movew	#0x7600,%a0@(comm)		| 
 	.long	0x0c688900, 0xfff067f8
-	movel	a0@,a1@
-	movel	a0@,a1@(4)
+	movel	%a0@,%a1@
+	movel	%a0@,%a1@(4)
 
-|	fmoved	fp2,d1
-	movew	#0x7500,a0@(comm)		| 
+|	fmoved	%fp2,%d1
+	movew	#0x7500,%a0@(comm)		| 
 	.long	0x0c688900, 0xfff067f8
-	movel	a0@,a1@(8)
-	movel	a0@,a1@(12)
+	movel	%a0@,%a1@(8)
+	movel	%a0@,%a1@(12)
 ");	/* end asm	*/
 #endif /* sfp004 */
 

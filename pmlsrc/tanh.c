@@ -158,54 +158,54 @@ __asm(
 #ifdef	__M68881__
 
     __asm(
-"	ftanhd	a7@(4), fp0	| tanh\t\n"
-"	fmoved	fp0,a7@-	| push result\t\n"
-"	moveml	a7@+,d0-d1	| return_value\t\n"
+"	ftanhd	%a7@(4), %fp0	| tanh\t\n"
+"	fmoved	%fp0,%a7@-	| push result\t\n"
+"	moveml	%a7@+,%d0-%d1	| return_value\t\n"
     );	/* end asm	*/
 
 #endif /* __M68881__ */
 #ifdef	sfp004
     __asm(
-"	lea	0xfffa50,a0\t\n"
-"	movew	#0x5409,a0@(comm)	| specify function\t\n"
-"	cmpiw	#0x8900,a0@(resp)	| check\t\n"
-"	movel	a7@(4),a0@		| load arg_hi\t\n"
-"	movel	a7@(8),a0@		| load arg_low\t\n"
-"	movew	#0x7400,a0@(comm)	| result to d0\t\n"
+"	lea	0xfffa50,%a0\t\n"
+"	movew	#0x5409,%a0@(comm)	| specify function\t\n"
+"	cmpiw	#0x8900,%a0@(resp)	| check\t\n"
+"	movel	%a7@(4),%a0@		| load arg_hi\t\n"
+"	movel	%a7@(8),%a0@		| load arg_low\t\n"
+"	movew	#0x7400,%a0@(comm)	| result to d0\t\n"
 "	.long	0x0c688900, 0xfff067f8	| wait\t\n"
-"	movel	a0@,d0\t\n"
-"	movel	a0@,d1\t\n"
+"	movel	%a0@,%d0\t\n"
+"	movel	%a0@,%d1\t\n"
 );	/* end asm	*/
 
 #endif /* sfp004 */
 #if defined (__M68881__) || defined (sfp004)
 # ifdef	ERROR_CHECK
     __asm(
-"	lea	double_max,a0	|\t\n"
-"	swap	d0		| exponent into lower word\t\n"
-"	cmpw	a0@(16),d0	| == NaN ?\t\n"
+"	lea	double_max,%a0	|\t\n"
+"	swap	%d0		| exponent into lower word\t\n"
+"	cmpw	%a0@(16),%d0	| == NaN ?\t\n"
 "	beq	error_nan	|\t\n"
-"	swap	d0		| result ok,\t\n"
+"	swap	%d0		| result ok,\t\n"
 "	rts			| restore d0\t\n"
 );
 #ifndef	__MSHORT__
 __asm(
 "error_nan:\t\n"
-"	moveml	a0@(24),d0-d1	| result = +inf\t\n"
-"	moveml	d0-d1,a7@-\t\n"
+"	moveml	%a0@(24),%d0-%d1	| result = +inf\t\n"
+"	moveml	%d0-%d1,%a7@-\t\n"
 "	movel	#62,_errno	| NAN => errno = EDOM\t\n"
 );
 #else	/* __MSHORT__ */
 __asm(
 "error_nan:\t\n"
-"	moveml	a0@(24),d0-d1	| result = +inf\t\n"
-"	moveml	d0-d1,a7@-\t\n"
+"	moveml	%a0@(24),%d0-%d1	| result = +inf\t\n"
+"	moveml	%d0-%d1,%a7@-\t\n"
 "	movew	#62,_errno	| NAN => errno = EDOM\t\n"
 );
 #endif	/* __MSHORT__ */
 __asm(
 "error_exit:\t\n"
-"	moveml	a7@+,d0-d1\t\n"
+"	moveml	%a7@+,%d0-%d1\t\n"
 "	rts\t\n"
     );
 # else	/* ERROR_CHECK */

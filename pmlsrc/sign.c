@@ -91,13 +91,13 @@ __asm(
 ".globl _copysign\t\n"
 "\t\n"
 "_copysign:\t\n"
-"	moveml	a7@(4),d0-d1\t\n"
-"	btst	#31,a7@(12)\t\n"
+"	moveml	%a7@(4),%d0-%d1\t\n"
+"	btst	#31,%a7@(12)\t\n"
 "	beq	clear\t\n"
-"	bset	#31,d0\t\n"
+"	bset	#31,%d0\t\n"
 "	rts\t\n"
 "clear:\t\n"
-"	bclr	#31,d0\t\n"
+"	bclr	#31,%d0\t\n"
 "	rts\t\n"
 );	/* end asm	*/
 

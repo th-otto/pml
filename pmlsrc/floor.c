@@ -39,17 +39,17 @@ double ceil (double x)
   int rounding_mode, round_up;
   double value;
 
-  __asm volatile ("fmove%.l fpcr,%0"
+  __asm volatile ("fmove%.l %%fpcr,%0"
 		  : "=dm" (rounding_mode)
 		  : /* no inputs */ );
   round_up = rounding_mode | 0x30;
-  __asm volatile ("fmove%.l %0,fpcr"
+  __asm volatile ("fmove%.l %0,%%fpcr"
 		  : /* no outputs */
 		  : "dmi" (round_up));
   __asm volatile ("fint%.x %1,%0"
 		  : "=f" (value)
 		  : "f" (x));
-  __asm volatile ("fmove%.l %0,fpcr"
+  __asm volatile ("fmove%.l %0,%%fpcr"
 		  : /* no outputs */
 		  : "dmi" (rounding_mode));
   return value;
@@ -60,18 +60,18 @@ double floor (double x)
   int rounding_mode, round_down;
   double value;
 
-  __asm volatile ("fmove%.l fpcr,%0"
+  __asm volatile ("fmove%.l %%fpcr,%0"
 		  : "=dm" (rounding_mode)
 		  : /* no inputs */ );
   round_down = (rounding_mode & ~0x10)
 		| 0x20;
-  __asm volatile ("fmove%.l %0,fpcr"
+  __asm volatile ("fmove%.l %0,%%fpcr"
 		  : /* no outputs */
 		  : "dmi" (round_down));
   __asm volatile ("fint%.x %1,%0"
 		  : "=f" (value)
 		  : "f" (x));
-  __asm volatile ("fmove%.l %0,fpcr"
+  __asm volatile ("fmove%.l %0,%%fpcr"
 		  : /* no outputs */
 		  : "dmi" (rounding_mode));
   return value;
