@@ -5,13 +5,6 @@
 
 #include	<errno.h>
 #include	<math.h>
-int errno;
-
-#if __STDC__
-double log(double), exp(double);
-#else
-double log(), exp();
-#endif
 
 double 
 pow(x,y)

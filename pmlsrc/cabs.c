@@ -55,11 +55,12 @@
  *
  */
 
-#if !defined (__M68881__) && !defined (sfp004)
-
 #include <stdio.h>
 #include <math.h>
 #include "pml.h"
+#include "symbols.h"
+
+#if !defined (__M68881__) && !defined (sfp004)
 
 
 double cabs (z)
@@ -108,8 +109,8 @@ COMPLEX z;
 #ifdef	__M68881__
 __asm(
 ".even\t\n"
-".globl _cabs\t\n"
-"_cabs:\t\n"
+".globl " C_SYMBOL_NAME(cabs) "\t\n"
+C_SYMBOL_NAME(cabs) ":\t\n"
 "	fmoved	%a7@(4),%fp0	|\t\n"
 "	fmulx	%fp0,%fp0		| x**2\t\n"
 "	fmoved	%a7@(12),%fp1	|\t\n"
@@ -150,10 +151,10 @@ __asm(
 "resp =	-16\t\n"
 "zahl =	  0\t\n"
 "\t\n"
-".globl _cabs\t\n"
+".globl " C_SYMBOL_NAME(cabs) "\t\n"
 ".text\t\n"
 ".even\t\n"
-"_cabs:\t\n"
+C_SYMBOL_NAME(cabs) ":\t\n"
 "	lea	0xfffa50,%a0\t\n"
 "\t\n"
 "	movew	#0x5400,%a0@(comm)	| load %fp0\t\n"
@@ -202,24 +203,24 @@ __asm(
 "error_plus:\t\n"
 "	swap	%d0\t\n"
 "	moveml	%d0-%d1,%a7@-\t\n"
-"	movel	#63,_errno	| NAN => errno = EDOM\t\n"
+"	movel	#63," C_SYMBOL_NAME(errno) "	| NAN => errno = EDOM\t\n"
 "	bra	error_exit	|\t\n"
 "error_nan:\t\n"
 "	moveml	%a0@(24),%d0-%d1	| result = +inf\t\n"
 "	moveml	%d0-%d1,%a7@-\t\n"
-"	movel	#62,_errno	| NAN => errno = EDOM\t\n"
+"	movel	#62," C_SYMBOL_NAME(errno) "	| NAN => errno = EDOM\t\n"
 );
 #else	/* __MSHORT__ */
 __asm(
 "error_plus:\t\n"
 "	swap	%d0\t\n"
 "	moveml	%d0-%d1,%a7@-\t\n"
-"	movew	#63,_errno	| NAN => errno = EDOM\t\n"
+"	movew	#63," C_SYMBOL_NAME(errno) "	| NAN => errno = EDOM\t\n"
 "	bra	error_exit	|\t\n"
 "error_nan:\t\n"
 "	moveml	%a0@(24),%d0-%d1	| result = +inf\t\n"
 "	moveml	%d0-%d1,%a7@-\t\n"
-"	movew	#62,_errno	| NAN => errno = EDOM\t\n"
+"	movew	#62," C_SYMBOL_NAME(errno) "	| NAN => errno = EDOM\t\n"
 );
 #endif	/* __MSHORT__ */
 __asm(

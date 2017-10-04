@@ -12,6 +12,7 @@
  */
 
 #include <math.h>
+#include "symbols.h"
 
 /*    round.c - performs rounding
  */
@@ -82,9 +83,9 @@ __asm(
 "zahl =	  0\t\n"
 "\t\n"
 ".text\t\n"
-"	.globl _rint\t\n"
+"	.globl " C_SYMBOL_NAME(rint) "\t\n"
 ".even\t\n"
-"_rint:\t\n"
+C_SYMBOL_NAME(rint) ":\t\n"
 "	lea	0xfffa50,%a0\t\n"
 "|	movew	#0x5403,%a0@(comm)	| fintrz to fp0\t\n"
 "	movew	#0x5401,%a0@(comm)	| fint   to fp0\t\n"

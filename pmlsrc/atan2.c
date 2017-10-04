@@ -87,11 +87,12 @@
  *
  */
 
-#if !defined (__M68881__) && !defined (sfp004)
-
 #include <stdio.h>
 #include <math.h>
 #include "pml.h"
+#include "symbols.h"
+
+#if !defined (__M68881__) && !defined (sfp004)
 
 static char funcname[] = "atan2";
 
@@ -125,7 +126,7 @@ double x;
     return (result);
 }
 
-#endif /* !defined (__M68881__) #endif !defined (__M68881__) && !defined (sfp004)#endif !defined (__M68881__) && !defined (sfp004) !defined (sfp004) */
+#endif /* !defined (__M68881__) && !defined (sfp004) */
 #ifdef	__M68881__
 __asm(
 ".text\t\n"
@@ -134,8 +135,8 @@ __asm(
 "	.ascii	\"atan2\\0\"\t\n"
 "	.even\t\n"
 "\t\n"
-".globl	_atan2\t\n"
-"_atan2:\t\n"
+".globl	" C_SYMBOL_NAME(atan2) "\t\n"
+C_SYMBOL_NAME(atan2) ":\t\n"
 "| denormalized numbers are treated as 0\t\n"
 "	tstl	%sp@(12)\t\n"
 "	beq	5f		| x == 0!\t\n"

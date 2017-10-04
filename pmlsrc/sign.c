@@ -54,9 +54,9 @@
 #include <stdio.h>
 #include <math.h>
 #include "pml.h"
+#include "symbols.h"
 
-
-#if OLD
+#ifdef OLD
 
 double copysign (x, y)
 double x;
@@ -88,9 +88,9 @@ double y;
 __asm(
 ".text\t\n"
 ".even\t\n"
-".globl _copysign\t\n"
+".globl " C_SYMBOL_NAME(copysign) "\t\n"
 "\t\n"
-"_copysign:\t\n"
+C_SYMBOL_NAME(copysign) ":\t\n"
 "	moveml	%a7@(4),%d0-%d1\t\n"
 "	btst	#31,%a7@(12)\t\n"
 "	beq	clear\t\n"

@@ -12,6 +12,12 @@
  *									*
  ************************************************************************/
 
+#include <stdio.h>
+#include <math.h>
+#include "pml.h"
+#include "symbols.h"
+
+
 #ifdef	sfp004
 
 __asm("
@@ -64,8 +70,8 @@ zahl =	  0
 # endif	ERROR_CHECK
 
     __asm(".even\t\n"
-"	.globl _exp10\t\n"
-"_exp10:\t\n"
+"	.globl " C_SYMBOL_NAME(exp10) "\t\n"
+C_SYMBOL_NAME(exp10) ":\t\n"
     );	/* end asm	*/
 
 #endif	/* __M68881__ || sfp004	*/
@@ -79,17 +85,17 @@ zahl =	  0
 
 #endif /* __M68881__ */
 #ifdef	sfp004
-    __asm("
-	lea	0xfffa50,%a0
-	movew	#0x5412,%a0@(comm)	| specify function
-	cmpiw	#0x8900,%a0@(resp)	| check
-	movel	%a7@(4),%a0@		| load arg_hi
-	movel	%a7@(8),%a0@		| load arg_low
-	movew	#0x7400,%a0@(comm)	| result to d0
-	.long	0x0c688900, 0xfff067f8	| wait
-	movel	%a0@,%d0
-	movel	%a0@,%d1
-    ");	/* end asm	*/
+    __asm(
+"	lea	0xfffa50,%a0\t\n"
+"	movew	#0x5412,%a0@(comm)	| specify function\t\n"
+"	cmpiw	#0x8900,%a0@(resp)	| check\t\n"
+"	movel	%a7@(4),%a0@		| load arg_hi\t\n"
+"	movel	%a7@(8),%a0@		| load arg_low\t\n"
+"	movew	#0x7400,%a0@(comm)	| result to d0\t\n"
+"	.long	0x0c688900, 0xfff067f8	| wait\t\n"
+"	movel	%a0@,%d0\t\n"
+"	movel	%a0@,%d1\t\n"
+);	/* end asm	*/
 
 #endif /* sfp004 */
 #if defined (__M68881__) || defined (sfp004)
@@ -109,24 +115,24 @@ __asm(
 "error_plus:\t\n"
 "	swap	%d0\t\n"
 "	moveml	%d0-%d1,%a7@-\t\n"
-"	movel	#63,_errno	| NAN => errno = EDOM\t\n"
+"	movel	#63," C_SYMBOL_NAME(errno) "	| NAN => errno = EDOM\t\n"
 "	bra	error_exit	|\t\n"
 "error_nan:\t\n"
 "	moveml	%a0@(24),%d0-%d1	| result = +inf\t\n"
 "	moveml	%d0-%d1,%a7@-\t\n"
-"	movel	#62,_errno	| NAN => errno = EDOM\t\n"
+"	movel	#62," C_SYMBOL_NAME(errno) "	| NAN => errno = EDOM\t\n"
 );
 #else	__MSHORT__
 __asm(
 "error_plus:\t\n"
 "	swap	%d0\t\n"
 "	moveml	%d0-%d1,%a7@-\t\n"
-"	movew	#63,_errno	| NAN => errno = EDOM\t\n"
+"	movew	#63," C_SYMBOL_NAME(errno) "	| NAN => errno = EDOM\t\n"
 "	bra	error_exit	|\t\n"
 "error_nan:\t\n"
 "	moveml	%a0@(24),%d0-%d1	| result = +inf\t\n"
 "	moveml	%d0-%d1,%a7@-\t\n"
-"	movew	#62,_errno	| NAN => errno = EDOM\t\n"
+"	movew	#62," C_SYMBOL_NAME(errno) "	| NAN => errno = EDOM\t\n"
 );
 #endif	__MSHORT__
 __asm(

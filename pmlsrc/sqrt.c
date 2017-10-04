@@ -143,11 +143,12 @@
  *	Michal Jaegermann, 21 October 1992
  */
 
-#if !defined (__M68881__) && !defined (sfp004)
-
 #include <stdio.h>
 #include <math.h>
 #include "pml.h"
+#include "symbols.h"
+
+#if !defined (__M68881__) && !defined (sfp004)
 
 #define P0  0.3608580479718948e+00
 #define P1  0.7477707028388739e+00
@@ -260,9 +261,8 @@ __asm(
 # endif	/* ERROR_CHECK */
 
     __asm(".even\t\n"
-".globl _hypot\t\n"
-".globl _sqrt\t\n"
-"_sqrt:\t\n"
+".globl " C_SYMBOL_NAME(sqrt) "\t\n"
+C_SYMBOL_NAME(sqrt) ":\t\n"
     );	/* end asm	*/
 
 #endif	/* __M68881__ || sfp004	*/
@@ -307,24 +307,24 @@ __asm(
 "error_plus:\t\n"
 "	swap	%d0\t\n"
 "	moveml	%d0-%d1,%a7@-\t\n"
-"	movel	#63,_errno	| NAN => errno = EDOM\t\n"
+"	movel	#63," C_SYMBOL_NAME(errno) "	| NAN => errno = EDOM\t\n"
 "	bra	error_exit	|\t\n"
 "error_nan:\t\n"
 "	moveml	%a0@(24),%d0-%d1	| result = +inf\t\n"
 "	moveml	%d0-%d1,%a7@-\t\n"
-"	movel	#62,_errno	| NAN => errno = EDOM\t\n"
+"	movel	#62," C_SYMBOL_NAME(errno) "	| NAN => errno = EDOM\t\n"
 );
 #else	__MSHORT__
 __asm(
 "error_plus:\t\n"
 "	swap	%d0\t\n"
 "	moveml	%d0-%d1,%a7@-\t\n"
-"	movew	#63,_errno	| NAN => errno = EDOM\t\n"
+"	movew	#63," C_SYMBOL_NAME(errno) "	| NAN => errno = EDOM\t\n"
 "	bra	error_exit	|\t\n"
 "error_nan:\t\n"
 "	moveml	%a0@(24),%d0-%d1	| result = +inf\t\n"
 "	moveml	%d0-%d1,%a7@-\t\n"
-"	movew	#62,_errno	| NAN => errno = EDOM\t\n"
+"	movew	#62," C_SYMBOL_NAME(errno) "	| NAN => errno = EDOM\t\n"
 );
 #endif	/* __MSHORT__ */
 __asm(
@@ -336,7 +336,8 @@ __asm(
 "	rts\t\n"
 "\t\n"
 ".even\t\n"
-"_hypot:\t\n"
+".globl " C_SYMBOL_NAME(hypot) "\t\n"
+C_SYMBOL_NAME(hypot) ":\t\n"
     );
 #endif /* __M68881__ || sfp004	*/
 #ifdef __M68881__

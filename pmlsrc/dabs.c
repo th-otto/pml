@@ -51,16 +51,22 @@
  *	Fred Fish
  *
  */
+
+#include <stdio.h>
+#include <math.h>
+#include "pml.h"
+#include "symbols.h"
+
 #if !defined (OLD)	/* mjr++	*/
 
 __asm(
 ".text\t\n"
 ".even\t\n"
-".globl _dabs\t\n"
-".globl _fabs\t\n"
+".globl " C_SYMBOL_NAME(dabs) "\t\n"
+".globl " C_SYMBOL_NAME(fabs) "\t\n"
 "\t\n"
-"_dabs:\t\n"
-"_fabs:\t\n"
+C_SYMBOL_NAME(dabs) ":\t\n"
+C_SYMBOL_NAME(fabs) ":\t\n"
 "	moveml	%a7@(4),%d0-%d1\t\n"
 "	bclr	#31,%d0\t\n"
 "	rts\t\n"
@@ -68,9 +74,6 @@ __asm(
 
 #else /* OLD */
 
-#include <stdio.h>
-#include <math.h>
-#include "pml.h"
 
 #ifdef IEEE
 struct bitdouble {
@@ -83,7 +86,7 @@ struct bitdouble {
 
 
 #if defined(m68k) && defined(__GNUC__)
-asm(".stabs \"_fabs\",5,0,0,_dabs"); /* dept of clean tricks */
+asm(".stabs \"" C_SYMBOL_NAME(fabs) "\",5,0,0," C_SYMBOL_NAME(dabs)); /* dept of clean tricks */
 #endif
 
 double dabs (x)

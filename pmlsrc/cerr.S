@@ -5,6 +5,8 @@
 |	a1:	pointer to double
 |	%a7@(4):	pointer to funcname
 
+#include "symbols.h"
+
 .text
 .even
 
@@ -34,33 +36,33 @@ continue:
 #ifndef	__MSHORT__
 error_minus:
 	moveml	%d0/%a1,%a7@-
-	movel	#63,_errno	| errno = ERANGE
+	movel	#63,C_SYMBOL_NAME(errno)	| errno = ERANGE
 	bra	error_exit	|
 error_plus:
 	moveml	%d0/%a1,%a7@-
-	movel	#63,_errno	| NAN => errno = EDOM
+	movel	#63,C_SYMBOL_NAME(errno)	| NAN => errno = EDOM
 	bra	error_exit	|
 error_nan:
 	moveml	%d0/%a1,%a7@-
-	lea	__infinitydf,%a0
+	lea	C_SYMBOL_NAME(_infinitydf),%a0
 	movel	%a0@,%a1@		| result = + Infinity (for now)
 	movel	%a0@(4),%a1@(4)	| result = + Infinity (for now)
-	movel	#62,_errno	| NAN => errno = EDOM
+	movel	#62,C_SYMBOL_NAME(errno)	| NAN => errno = EDOM
 #else	__MSHORT__
 error_minus:
 	moveml	%d0/%a1,%a7@-
-	movew	#63,_errno	| errno = ERANGE
+	movew	#63,C_SYMBOL_NAME(errno)	| errno = ERANGE
 	bra	error_exit	|
 error_plus:
 	moveml	%d0/%a1,%a7@-
-	movew	#63,_errno	| NAN => errno = EDOM
+	movew	#63,C_SYMBOL_NAME(errno)	| NAN => errno = EDOM
 	bra	error_exit	|
 error_nan:
 	moveml	%d0/%a1,%a7@-
-	lea	__infinitydf,%a0
+	lea	C_SYMBOL_NAME(_infinitydf),%a0
 	movel	%a0@,%a1@		| result = + Infinity (for now)
 	movel	%a0@(4),%a1@(4)	| result = + Infinity (for now)
-	movew	#62,_errno	| NAN => errno = EDOM
+	movew	#62,C_SYMBOL_NAME(errno)	| NAN => errno = EDOM
 #endif	__MSHORT__
 error_exit:
 	moveml	%a7@+,%d0/%a1
@@ -69,33 +71,33 @@ error_exit:
 #ifndef __MSHORT__
 error_minus_i:
 	moveml	%d0/%a1,%a7@-
-	movel	#63,_errno	| errno = ERANGE
+	movel	#63,C_SYMBOL_NAME(errno)	| errno = ERANGE
 	bra	error_exit_i	|
 error_plus_i:
 	moveml	%d0/%a1,%a7@-
-	movel	#63,_errno	| NAN => errno = EDOM
+	movel	#63,C_SYMBOL_NAME(errno)	| NAN => errno = EDOM
 	bra	error_exit_i	|
 error_nan_i:
 	moveml	%d0/%a1,%a7@-
-	lea	__infinitydf,%a0
+	lea	C_SYMBOL_NAME(_infinitydf),%a0
 	movel	%a0@,%a1@(8)	| result = + Infinity (for now)
 	movel	%a0@(4),%a1@(12)	| result = + Infinity (for now)
-	movel	#62,_errno	| NAN => errno = EDOM
+	movel	#62,C_SYMBOL_NAME(errno)	| NAN => errno = EDOM
 #else __MSHORT__
 error_minus_i:
 	moveml	%d0/%a1,%a7@-
-	movew	#63,_errno	| errno = ERANGE
+	movew	#63,C_SYMBOL_NAME(errno)	| errno = ERANGE
 	bra	error_exit_i	|
 error_plus_i:
 	moveml	%d0/%a1,%a7@-
-	movew	#63,_errno	| NAN => errno = EDOM
+	movew	#63,C_SYMBOL_NAME(errno)	| NAN => errno = EDOM
 	bra	error_exit_i	|
 error_nan_i:
 	moveml	%d0/%a1,%a7@-
-	lea	__infinitydf,%a0
+	lea	C_SYMBOL_NAME(_infinitydf),%a0
 	movel	%a0@,%a1@(8)	| result = + Infinity (for now)
 	movel	%a0@(4),%a1@(12)	| result = + Infinity (for now)
-	movew	#62,_errno	| NAN => errno = EDOM
+	movew	#62,C_SYMBOL_NAME(errno)	| NAN => errno = EDOM
 #endif __MSHORT__
 
 error_exit_i:

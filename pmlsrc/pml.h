@@ -74,7 +74,6 @@
 #endif
 
 #include <errno.h>
-extern int errno;
 
 #ifndef atarist
 #ifdef ATARI_ST

@@ -146,11 +146,14 @@
  *
  */
 
-#if !defined (__M68881__) && !defined (sfp004)
-
 #include <stdio.h>
 #include <math.h>
 #include "pml.h"
+#include "symbols.h"
+
+
+#if !defined (__M68881__) && !defined (sfp004)
+
 
 			/* mjr++				*/
 			/* use a different routine instead	*/
@@ -185,8 +188,8 @@ static char funcname[] = "log";
 __asm__(
 "	.text\t\n"
 "	.even\t\n"
-"	.globl _log10\t\n"
-"_log10:");
+"	.globl " C_SYMBOL_NAME(log10) "\t\n"
+C_SYMBOL_NAME(log10) ":");
 #ifdef __MSHORT__
 __asm__(
 "	link %a6,#-32\t\n"
@@ -315,8 +318,8 @@ __asm(
 
     __asm(
 ".even\t\n"
-"	.globl _log\t\n"
-"_log:\t\n"
+"	.globl " C_SYMBOL_NAME(log) "\t\n"
+C_SYMBOL_NAME(log) ":\t\n"
     );	/* end asm	*/
 
 #endif	/* __M68881__ || sfp004	*/
@@ -362,34 +365,34 @@ __asm(
 "error_minus:\t\n"
 "	swap	%d0\t\n"
 "	moveml	%d0-%d1,%a7@-\t\n"
-"	movel	#63,_errno	| errno = ERANGE\t\n"
+"	movel	#63," C_SYMBOL_NAME(errno) "	| errno = ERANGE\t\n"
 "	bra	error_exit	|\t\n"
 "error_plus:\t\n"
 "	swap	%d0\t\n"
 "	moveml	%d0-%d1,%a7@-\t\n"
-"	movel	#63,_errno	| NAN => errno = EDOM\t\n"
+"	movel	#63," C_SYMBOL_NAME(errno) "	| NAN => errno = EDOM\t\n"
 "	bra	error_exit	|\t\n"
 "error_nan:\t\n"
 "	moveml	%a0@(24),%d0-%d1	| result = +inf\t\n"
 "	moveml	%d0-%d1,%a7@-\t\n"
-"	movel	#62,_errno	| NAN => errno = EDOM\t\n"
+"	movel	#62," C_SYMBOL_NAME(errno) "	| NAN => errno = EDOM\t\n"
 );
 #else	__MSHORT__
 __asm(
 "error_minus:\t\n"
 "	swap	%d0\t\n"
 "	moveml	%d0-%d1,%a7@-\t\n"
-"	movew	#63,_errno	| errno = ERANGE\t\n"
+"	movew	#63," C_SYMBOL_NAME(errno) "	| errno = ERANGE\t\n"
 "	bra	error_exit	|\t\n"
 "error_plus:\t\n"
 "	swap	%d0\t\n"
 "	moveml	%d0-%d1,%a7@-\t\n"
-"	movew	#63,_errno	| NAN => errno = EDOM\t\n"
+"	movew	#63," C_SYMBOL_NAME(errno) "	| NAN => errno = EDOM\t\n"
 "	bra	error_exit	|\t\n"
 "error_nan:\t\n"
 "	moveml	%a0@(24),%d0-%d1	| result = +inf\t\n"
 "	moveml	%d0-%d1,%a7@-\t\n"
-"	movew	#62,_errno	| NAN => errno = EDOM\t\n"
+"	movew	#62," C_SYMBOL_NAME(errno) "	| NAN => errno = EDOM\t\n"
 );
 #endif	__MSHORT__
 __asm(

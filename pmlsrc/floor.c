@@ -3,12 +3,12 @@
  * 	from pete housels posting
  */
 
+#include <stdio.h>
+#include <math.h>
+#include "pml.h"
+#include "symbols.h"
+
 #if !defined (__M68881__) && !defined (sfp004)
-#if __STDC__
-double	modf(double, double *);
-#else
-double	modf();
-#endif
 
 double
 floor(x)

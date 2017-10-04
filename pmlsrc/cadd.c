@@ -64,11 +64,12 @@
  *
  */
 
-#if !defined (__M68881__) && !defined (sfp004)
-
 #include <stdio.h>
 #include <math.h>
 #include "pml.h"
+#include "symbols.h"
+
+#if !defined (__M68881__) && !defined (sfp004)
 
 COMPLEX cadd (z1, z2)
 COMPLEX z1;
@@ -78,7 +79,7 @@ COMPLEX z2;
     z1.imag += z2.imag;
     return (z1);
 }
-#endif /* !defined (__M68881__) #endif !defined (__M68881__) && !defined (sfp004)#endif !defined (__M68881__) && !defined (sfp004) !defined (sfp004) */
+#endif /* !defined (__M68881__) && !defined (sfp004) */
 
 #ifdef	__M68881__
 __asm(
@@ -86,8 +87,8 @@ __asm(
 "_funcname:\t\n"
 "	.ascii	\"cadd\\0\"\t\n"
 ".even\t\n"
-".globl	_cadd\t\n"
-"_cadd:\t\n"
+".globl	" C_SYMBOL_NAME(cadd) "\t\n"
+C_SYMBOL_NAME(cadd) ":\t\n"
 "	fmoved	%sp@(4),%fp0\t\n"
 "	faddd	%sp@(20),%fp0\t\n"
 "	fmoved	%sp@(12),%fp1\t\n"
@@ -110,8 +111,8 @@ __asm(
 "	.ascii	\"cadd\\0\"\t\n"
 ".text\t\n"
 ".even\t\n"
-".globl	_cadd\t\n"
-"_cadd:\t\n"
+".globl	" C_SYMBOL_NAME(cadd) "\t\n"
+C_SYMBOL_NAME(cadd) ":\t\n"
 "	lea	0xfffa50,%a0\t\n"
 "	movew	#0x5400,%a0@(comm)	| z1.real -> fp0\t\n"
 "	.long	0x0c688900, 0xfff067f8\t\n"

@@ -63,11 +63,12 @@
  *
  */
 
-#if !defined (__M68881__) && !defined (sfp004)
-
 #include <stdio.h>
 #include <math.h>
 #include "pml.h"
+#include "symbols.h"
+
+#if !defined (__M68881__) && !defined (sfp004)
 
 COMPLEX csubt (z1, z2)
 COMPLEX z1;
@@ -77,7 +78,7 @@ COMPLEX z2;
     z1.imag -= z2.imag;
     return (z1);
 }
-#endif /* !defined (__M68881__) #endif !defined (__M68881__) && !defined (sfp004)#endif !defined (__M68881__) && !defined (sfp004) !defined (sfp004) */
+#endif /* !defined (__M68881__) && !defined (sfp004) */
 
 #ifdef	__M68881__
 __asm(
@@ -87,8 +88,8 @@ __asm(
 "	.ascii	\"csubt\\0\"\t\n"
 "	.even\t\n"
 "\t\n"
-".globl	_csubt\t\n"
-"_csubt:\t\n"
+".globl	" C_SYMBOL_NAME(csubt) \t\n"
+C_SYMBOL_NAME(csubt) ":\t\n"
 "	fmoved	%sp@(4),%fp0\t\n"
 "	fsubd	%sp@(20),%fp0\t\n"
 "	fmoved	%sp@(12),%fp1\t\n"
@@ -100,56 +101,56 @@ __asm(
 #endif /* __M68881__ */
 
 #ifdef	sfp004
-__asm("
-
-comm =	 -6
-resp =	-16
-zahl =	  0
-
-.even
-.text
-.even
-_funcname:
-	.ascii	\"csubt\\0\"
-	.even
-.text
-.even
-.globl	_csubt
-_csubt:
-	lea	0xfffa50,%a0
-	movew	#0x5400,%a0@(comm)	| z1.real -> fp0
-	.long	0x0c688900, 0xfff067f8
-	movel	%a7@(4),%a0@		| load arg_hi
-	movel	%a7@(8),%a0@		| load arg_low
-
-	movew	#0x5428,%a0@(comm)	| fp0 -= z2.real
-	.long	0x0c688900, 0xfff067f8
-	movel	%a7@(20),%a0@		| load arg_hi
-	movel	%a7@(24),%a0@		| load arg_low
-
-	movew	#0x5480,%a0@(comm)	| z1.imag -> fp1
-	.long	0x0c688900, 0xfff067f8
-	movel	%a7@(12),%a0@		| load arg_hi
-	movel	%a7@(16),%a0@		| load arg_low
-
-	movew	#0x54a8,%a0@(comm)	| fp1 -= z2.imag
-	movel	%a1,%d0			| pointer to result
-	.long	0x0c688900, 0xfff067f8
-	movel	%a7@(28),%a0@		| load arg_hi
-	movel	%a7@(32),%a0@		| load arg_low
-
-|	movew	#%0111 0101 0000 0000,%a0@(comm)	| fetch fp0
-	movew	#0x7400,%a0@(comm)		| 
-	.long	0x0c688900, 0xfff067f8
-	movel	%a0@(zahl),%a1@
-	movel	%a0@(zahl),%a1@(4)
-
-|	movew	#%0111 0100 1000 0000,%a0@(comm)	| fetch fp1
-	movew	#0x7480,%a0@(comm)		|
-	.long	0x0c688900, 0xfff067f8
-	movel	%a0@(zahl),%a1@(8)
-	movel	%a0@(zahl),%a1@(12)
-");	/* end asm	*/
+__asm(
+"\t\n"
+"comm =	 -6\t\n"
+"resp =	-16\t\n"
+"zahl =	  0\t\n"
+"\t\n"
+".even\t\n"
+".text\t\n"
+".even\t\n"
+"_funcname:\t\n"
+"	.ascii	\"csubt\\0\"\t\n"
+"	.even\t\n"
+".text\t\n"
+".even\t\n"
+".globl	" C_SYMBOL_NAME(csubt)\t\n"
+C_SYMBOL_NAME(csubt):\t\n"
+"	lea	0xfffa50,%a0\t\n"
+"	movew	#0x5400,%a0@(comm)	| z1.real -> fp0\t\n"
+"	.long	0x0c688900, 0xfff067f8\t\n"
+"	movel	%a7@(4),%a0@		| load arg_hi\t\n"
+"	movel	%a7@(8),%a0@		| load arg_low\t\n"
+"\t\n"
+"	movew	#0x5428,%a0@(comm)	| fp0 -= z2.real\t\n"
+"	.long	0x0c688900, 0xfff067f8\t\n"
+"	movel	%a7@(20),%a0@		| load arg_hi\t\n"
+"	movel	%a7@(24),%a0@		| load arg_low\t\n"
+"\t\n"
+"	movew	#0x5480,%a0@(comm)	| z1.imag -> fp1\t\n"
+"	.long	0x0c688900, 0xfff067f8\t\n"
+"	movel	%a7@(12),%a0@		| load arg_hi\t\n"
+"	movel	%a7@(16),%a0@		| load arg_low\t\n"
+"\t\n"
+"	movew	#0x54a8,%a0@(comm)	| fp1 -= z2.imag\t\n"
+"	movel	%a1,%d0			| pointer to result\t\n"
+"	.long	0x0c688900, 0xfff067f8\t\n"
+"	movel	%a7@(28),%a0@		| load arg_hi\t\n"
+"	movel	%a7@(32),%a0@		| load arg_low\t\n"
+"\t\n"
+"|	movew	#%0111 0101 0000 0000,%a0@(comm)	| fetch fp0\t\n"
+"	movew	#0x7400,%a0@(comm)		| \t\n"
+"	.long	0x0c688900, 0xfff067f8\t\n"
+"	movel	%a0@(zahl),%a1@\t\n"
+"	movel	%a0@(zahl),%a1@(4)\t\n"
+"\t\n"
+"|	movew	#%0111 0100 1000 0000,%a0@(comm)	| fetch fp1\t\n"
+"	movew	#0x7480,%a0@(comm)		|\t\n"
+"	.long	0x0c688900, 0xfff067f8\t\n"
+"	movel	%a0@(zahl),%a1@(8)\t\n"
+"	movel	%a0@(zahl),%a1@(12)\t\n"
+);	/* end asm	*/
 #endif /* sfp004 */
 
 #if defined (__M68881__) || defined (sfp004)
