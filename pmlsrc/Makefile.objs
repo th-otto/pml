@@ -45,7 +45,7 @@ ifeq ($(TARGET),v4e)
 CFLAGS += -mcpu=5475
 endif
 
-ifeq ($(TARGET),v4e)
+ifeq ($(TARGET),v4e16)
 CFLAGS += -mcpu=5475 -mshort
 endif
 
