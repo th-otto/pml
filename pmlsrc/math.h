@@ -260,6 +260,7 @@ extern double pow (double, double) __THROW;
 extern double fabs (double) __THROW;
 extern double ceil (double) __THROW;
 extern double floor (double) __THROW;
+extern double round (double) __THROW;
 extern double rint (double) __THROW;
 extern double fmod (double, double) __THROW;
 
