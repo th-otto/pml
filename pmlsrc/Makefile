@@ -87,13 +87,14 @@ ifeq ($(WITH_SHORT_LIBS),yes)
 	install -m 644 libpmlv4e16.a $(DESTDIR)$(PREFIX)/lib/m5475/mshort/libm.a
 endif
 endif
-	install -m 755 -d $(DESTDIR)$(PREFIX)/include
+	install -m 755 -d $(DESTDIR)$(PREFIX)/include/bits
 	install -m 644 math.h $(DESTDIR)$(PREFIX)/include
+	install -m 644 bits/nan.h bits/huge_val.h bits/mathdef.h $(DESTDIR)$(PREFIX)/include/bits
 
 uinstall:
 	for file in libm.a mshort/libm.a m68020-60/libm.a m68020-60/mshort/libm.a m5475/libm.a m5475/mshort/libm.a; do \
 		$(RM) $(DESTDIR)$(PREFIX)/lib/$$file; \
 	done
-	for file in math.h; do \
+	for file in math.h bits/nan.h bits/huge_val.h bits/mathdef.h; do \
 		$(RM) $(DESTDIR)$(PREFIX)/include/$$file; \
 	done
